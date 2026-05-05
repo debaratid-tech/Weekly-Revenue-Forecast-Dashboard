@@ -7,138 +7,141 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <style>
   :root{
-    --bg:#0f1117;--card:#1a1d27;--border:#2a2d3a;
-    --green:#22c55e;--yellow:#f59e0b;--red:#ef4444;--blue:#3b82f6;--purple:#8b5cf6;
-    --text:#e2e8f0;--muted:#94a3b8;--accent:#6366f1;
+    --bg:#f1f5f9;--card:#ffffff;--border:#e2e8f0;
+    --green:#16a34a;--yellow:#d97706;--red:#dc2626;--blue:#2563eb;--purple:#7c3aed;
+    --teal:#0d9488;--orange:#ea580c;
+    --text:#0f172a;--muted:#64748b;--accent:#4f46e5;
   }
   *{box-sizing:border-box;margin:0;padding:0}
   body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,sans-serif;font-size:14px;min-height:100vh}
-  a{color:var(--accent)}
 
-  /* ── layout ── */
-  .header{background:linear-gradient(135deg,#1e1b4b 0%,#312e81 50%,#1e1b4b 100%);
+  .header{background:linear-gradient(135deg,#3730a3 0%,#4f46e5 50%,#3730a3 100%);
     padding:20px 28px;display:flex;align-items:center;justify-content:space-between;
-    border-bottom:1px solid var(--border)}
+    border-bottom:1px solid #312e81}
   .header-left{display:flex;align-items:center;gap:14px}
-  .logo{width:36px;height:36px;background:var(--accent);border-radius:8px;
+  .logo{width:36px;height:36px;background:rgba(255,255,255,.2);border-radius:8px;
     display:flex;align-items:center;justify-content:center;font-weight:900;font-size:16px;color:#fff}
-  .header h1{font-size:20px;font-weight:700;letter-spacing:-.3px}
-  .header .sub{font-size:12px;color:#a5b4fc;margin-top:2px}
+  .header h1{font-size:20px;font-weight:700;letter-spacing:-.3px;color:#fff}
+  .header .sub{font-size:12px;color:#c7d2fe;margin-top:2px}
   .live-badge{background:#15803d;color:#bbf7d0;padding:4px 10px;border-radius:20px;
     font-size:11px;font-weight:600;letter-spacing:.5px;display:flex;align-items:center;gap:5px}
   .live-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:#4ade80;
     animation:pulse 1.5s infinite}
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
 
-  .content{padding:24px 28px;max-width:1800px;margin:0 auto}
+  .content{padding:24px 28px;max-width:1900px;margin:0 auto}
 
-  /* ── kpi cards ── */
-  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
-  .kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:18px 20px}
-  .kpi-label{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:6px}
-  .kpi-value{font-size:26px;font-weight:800;letter-spacing:-1px}
-  .kpi-sub{font-size:11px;color:var(--muted);margin-top:4px}
-  .kpi.green .kpi-value{color:var(--green)}
+  /* ── section headers ── */
+  .section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;
+    color:var(--muted);margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+  /* ── kpi grid ── */
+  .kpi-grid{display:grid;gap:12px;margin-bottom:8px}
+  .kpi-grid-6{grid-template-columns:repeat(6,1fr)}
+  .kpi-grid-5{grid-template-columns:repeat(5,1fr)}
+  .kpi{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px 18px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .kpi-label{font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin-bottom:5px}
+  .kpi-value{font-size:22px;font-weight:800;letter-spacing:-1px}
+  .kpi-sub{font-size:11px;color:var(--muted);margin-top:3px}
+  .kpi.green  .kpi-value{color:var(--green)}
   .kpi.yellow .kpi-value{color:var(--yellow)}
-  .kpi.red .kpi-value{color:var(--red)}
-  .kpi.blue .kpi-value{color:var(--blue)}
+  .kpi.red    .kpi-value{color:var(--red)}
+  .kpi.blue   .kpi-value{color:var(--blue)}
   .kpi.purple .kpi-value{color:var(--purple)}
+  .kpi.teal   .kpi-value{color:var(--teal)}
+  .kpi.orange .kpi-value{color:var(--orange)}
+  .kpi.white  .kpi-value{color:var(--text)}
+  .delta-pos{color:var(--green)!important}
+  .delta-neg{color:var(--red)!important}
 
-  /* ── charts row ── */
-  .charts-row{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:16px;margin-bottom:24px}
-  .chart-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
-  .chart-card h3{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;
-    letter-spacing:.6px;margin-bottom:16px}
-  .chart-wrap{position:relative;height:220px}
+  /* ── charts ── */
+  .charts-row{display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:16px;margin-bottom:20px}
+  .chart-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .chart-card h3{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;
+    letter-spacing:.6px;margin-bottom:14px}
+  .chart-wrap{position:relative;height:200px}
 
   /* ── risk patterns ── */
   .risk-patterns{background:var(--card);border:1px solid var(--border);border-radius:12px;
-    padding:20px;margin-bottom:24px}
-  .risk-patterns h3{font-size:13px;font-weight:600;color:var(--muted);text-transform:uppercase;
-    letter-spacing:.6px;margin-bottom:14px}
-  .pattern-list{display:flex;gap:16px;flex-wrap:wrap}
-  .pattern-item{background:#1e213a;border:1px solid #2a2d4a;border-radius:8px;padding:12px 16px;flex:1;min-width:180px}
-  .pattern-rank{font-size:10px;color:var(--muted);margin-bottom:4px}
-  .pattern-name{font-weight:600;font-size:14px;color:var(--red)}
-  .pattern-count{font-size:11px;color:var(--muted);margin-top:4px}
+    padding:18px 20px;margin-bottom:20px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .risk-patterns h3{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;
+    letter-spacing:.6px;margin-bottom:12px}
+  .pattern-list{display:flex;gap:14px;flex-wrap:wrap}
+  .pattern-item{background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:10px 14px;flex:1;min-width:160px}
+  .pattern-rank{font-size:10px;color:var(--muted);margin-bottom:3px}
+  .pattern-name{font-weight:600;font-size:13px;color:var(--red)}
+  .pattern-count{font-size:11px;color:var(--muted);margin-top:3px}
 
   /* ── filters ── */
   .filters{background:var(--card);border:1px solid var(--border);border-radius:12px;
-    padding:16px 20px;margin-bottom:20px;display:flex;flex-wrap:wrap;gap:12px;align-items:center}
-  .filters label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
-  .filters select,.filters input{background:#0f1117;border:1px solid var(--border);color:var(--text);
-    padding:7px 12px;border-radius:7px;font-size:13px;outline:none;cursor:pointer}
+    padding:14px 18px;margin-bottom:16px;display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .filters label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;display:block;margin-bottom:3px}
+  .filters select,.filters input{background:#ffffff;border:1px solid var(--border);color:var(--text);
+    padding:6px 10px;border-radius:7px;font-size:12px;outline:none;cursor:pointer;width:100%}
   .filters select:hover,.filters input:hover{border-color:var(--accent)}
-  .filter-group{display:flex;flex-direction:column;gap:4px}
-  .btn-reset{background:var(--accent);color:#fff;border:none;padding:8px 16px;border-radius:7px;
-    font-size:13px;font-weight:600;cursor:pointer;margin-left:auto}
-  .btn-reset:hover{background:#4f46e5}
-  #search-input{padding:7px 12px;min-width:220px}
+  .filter-group{display:flex;flex-direction:column;min-width:120px}
+  .filter-group.wide{min-width:180px}
+  .btn-reset{background:var(--accent);color:#fff;border:none;padding:7px 14px;border-radius:7px;
+    font-size:12px;font-weight:600;cursor:pointer;align-self:flex-end}
+  .btn-reset:hover{background:#4338ca}
 
   /* ── table ── */
-  .table-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px}
-  .table-header{padding:16px 20px;display:flex;justify-content:space-between;align-items:center;
+  .table-wrap{background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .table-header{padding:14px 18px;display:flex;justify-content:space-between;align-items:center;
     border-bottom:1px solid var(--border)}
-  .table-header h3{font-size:15px;font-weight:700}
+  .table-header h3{font-size:14px;font-weight:700;color:var(--text)}
   .table-header .count{font-size:12px;color:var(--muted)}
+  .export-btn{background:#f8fafc;border:1px solid var(--border);color:var(--muted);
+    padding:5px 12px;border-radius:6px;font-size:11px;cursor:pointer}
+  .export-btn:hover{color:var(--text);border-color:var(--accent)}
   .table-scroll{overflow-x:auto}
   table{width:100%;border-collapse:collapse}
-  thead th{padding:11px 14px;text-align:left;font-size:11px;text-transform:uppercase;
-    letter-spacing:.6px;color:var(--muted);background:#13161f;border-bottom:1px solid var(--border);
+  thead th{padding:9px 12px;text-align:left;font-size:10px;text-transform:uppercase;
+    letter-spacing:.6px;color:var(--muted);background:#f8fafc;border-bottom:1px solid var(--border);
     white-space:nowrap;cursor:pointer;user-select:none}
   thead th:hover{color:var(--text)}
   thead th.sort-asc::after{content:' ↑'}
   thead th.sort-desc::after{content:' ↓'}
-  tbody tr{border-bottom:1px solid #1e2130;transition:background .15s}
-  tbody tr:hover{background:#1f2338}
+  tbody tr{border-bottom:1px solid #f1f5f9;transition:background .15s}
+  tbody tr:hover{background:#f8fafc}
+  tbody tr.row-cw{background:rgba(22,163,74,.05)}
+  tbody tr.row-cl{background:rgba(220,38,38,.04)}
   tbody tr:last-child{border-bottom:none}
-  td{padding:12px 14px;vertical-align:middle;white-space:nowrap}
-  td.account-name{max-width:200px;white-space:normal;font-weight:600;font-size:13px;word-break:break-word}
-  td.action-cell{max-width:260px;white-space:normal;font-size:12px;color:var(--muted);word-break:break-word}
+  td{padding:10px 12px;vertical-align:middle;white-space:nowrap;font-size:13px}
+  td.account-name{max-width:180px;white-space:normal;font-weight:600;word-break:break-word}
+  td.action-cell{max-width:240px;white-space:normal;font-size:11px;color:var(--muted);word-break:break-word}
 
   /* ── badges ── */
-  .badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:20px;
-    font-size:11px;font-weight:600;white-space:nowrap}
-  .badge-high{background:#450a0a;color:var(--red);border:1px solid #7f1d1d}
-  .badge-medium{background:#451a03;color:var(--yellow);border:1px solid #78350f}
-  .badge-low{background:#052e16;color:var(--green);border:1px solid #14532d}
-  .badge-committed{background:#052e16;color:var(--green);border:1px solid #14532d}
-  .badge-likely{background:#1c1917;color:#fb923c;border:1px solid #78350f}
-  .badge-atrisk{background:#450a0a;color:var(--red);border:1px solid #7f1d1d}
-  .badge-enterprise{background:#1e1b4b;color:#a5b4fc;border:1px solid #312e81}
-  .badge-business{background:#1c1917;color:#d6d3d1;border:1px solid #44403c}
-  .prob-bar{width:80px;height:6px;background:#1e2130;border-radius:3px;display:inline-block;
-    vertical-align:middle;margin-right:6px}
+  .badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:20px;
+    font-size:10px;font-weight:600;white-space:nowrap}
+  .badge-high      {background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5}
+  .badge-medium    {background:#fef3c7;color:#b45309;border:1px solid #fcd34d}
+  .badge-low       {background:#dcfce7;color:#15803d;border:1px solid #86efac}
+  .badge-closedwon {background:#dcfce7;color:#15803d;border:1px solid #86efac}
+  .badge-closedlost{background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5}
+  .badge-committed {background:#dcfce7;color:#15803d;border:1px solid #86efac}
+  .badge-likely    {background:#fff7ed;color:#c2410c;border:1px solid #fdba74}
+  .badge-atrisk2   {background:#fee2e2;color:#b91c1c;border:1px solid #fca5a5}
+  .badge-enterprise{background:#ede9fe;color:#4f46e5;border:1px solid #c4b5fd}
+  .badge-business  {background:#f1f5f9;color:#475569;border:1px solid #cbd5e1}
+  .stage-pill{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600}
+  .prob-bar{width:70px;height:5px;background:#e2e8f0;border-radius:3px;display:inline-block;
+    vertical-align:middle;margin-right:5px}
   .prob-fill{height:100%;border-radius:3px}
-  .prob-val{font-size:12px;font-weight:700}
+  .prob-val{font-size:11px;font-weight:700}
   .days-urgent{color:var(--red);font-weight:700}
-  .days-soon{color:var(--yellow);font-weight:600}
-  .arr-val{font-weight:700;font-size:13px;color:#c4b5fd}
-  .exp-high{color:var(--green);font-weight:600}
-  .exp-med{color:var(--yellow)}
-  .exp-low{color:var(--red)}
+  .days-soon  {color:var(--yellow);font-weight:600}
+  .arr-val    {font-weight:700;color:#4f46e5}
+  .delta-cell-pos{color:var(--green);font-weight:600}
+  .delta-cell-neg{color:var(--red);font-weight:600}
+  .delta-cell-zero{color:var(--muted)}
 
-  /* ── footer ── */
-  .footer{text-align:center;padding:20px;color:var(--muted);font-size:11px;border-top:1px solid var(--border)}
+  .footer{text-align:center;padding:18px;color:var(--muted);font-size:11px;border-top:1px solid var(--border)}
   .footer span{color:var(--accent)}
 
-  /* ── tooltip ── */
-  [title]{cursor:help}
-
-  /* ── data note ── */
-  .data-note{background:#1a1d27;border:1px solid #312e81;border-radius:10px;
-    padding:14px 18px;margin-bottom:20px;font-size:12px;color:#a5b4fc;display:flex;gap:10px}
-  .data-note strong{color:#c4b5fd}
-
-  @media(max-width:900px){
-    .charts-row{grid-template-columns:1fr 1fr}
-    .charts-row .chart-card:last-child{grid-column:1/-1}
-    .content{padding:16px}
-  }
-  @media(max-width:600px){
-    .charts-row{grid-template-columns:1fr}
-    .kpi-grid{grid-template-columns:1fr 1fr}
-  }
+  @media(max-width:1200px){.kpi-grid-6{grid-template-columns:repeat(3,1fr)}}
+  @media(max-width:800px) {.kpi-grid-6{grid-template-columns:repeat(2,1fr)};.charts-row{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -148,78 +151,160 @@
     <div class="logo">U</div>
     <div>
       <h1>Revenue Forecast Dashboard</h1>
-      <div class="sub">CSM Book of Business · Powered by RevOps AI · George Moser, Nathalli Ibarra, Sedondra Ellis</div>
+      <div class="sub">CSM Book of Business · RevOps AI · George Moser · Nathalli Ibarra · Sedondra Ellis</div>
     </div>
   </div>
-  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px">
+  <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
     <div class="live-badge">LIVE</div>
-    <div style="font-size:11px;color:#a5b4fc">Last updated: May 05, 2026 at 01:08 PM</div>
+    <div style="font-size:11px;color:#c7d2fe">Last updated: May 05, 2026 at 02:30 PM</div>
   </div>
 </div>
 
 <div class="content">
 
-  <div class="data-note">
-    <span>ℹ️</span>
-    <div><strong>Data Sources Connected:</strong> Salesforce (Accounts &amp; Renewals) ·
-    <strong style="color:#6b7280">Awaiting:</strong> Metabase product usage (match via Customer ID) · Intercom support tickets (match via Customer ID/Domain) ·
-    AI scoring adjusts automatically when new data sources are connected.</div>
-  </div>
-
-  <!-- KPI CARDS -->
-  <div class="kpi-grid" id="kpi-grid">
-    <div class="kpi blue">
-      <div class="kpi-label">Total Pipeline ARR</div>
-      <div class="kpi-value" id="kpi-total">—</div>
-      <div class="kpi-sub" id="kpi-accounts-count">— accounts</div>
+  <!-- ── SECTION 1: BOOK OF BUSINESS ── -->
+  <div class="section-label" style="margin-top:4px">Book of Business</div>
+  <div class="kpi-grid kpi-grid-6" style="margin-bottom:20px">
+    <div class="kpi white">
+      <div class="kpi-label">Total Book ARR</div>
+      <div class="kpi-value" id="k-book">—</div>
+      <div class="kpi-sub" id="k-book-n">— accounts</div>
     </div>
-    <div class="kpi green">
-      <div class="kpi-label">Committed</div>
-      <div class="kpi-value" id="kpi-committed">—</div>
-      <div class="kpi-sub" id="kpi-committed-pct">—% of pipeline</div>
+    <div class="kpi blue">
+      <div class="kpi-label">Open Pipeline</div>
+      <div class="kpi-value" id="k-open">—</div>
+      <div class="kpi-sub" id="k-open-n">— accounts</div>
     </div>
     <div class="kpi yellow">
-      <div class="kpi-label">Likely</div>
-      <div class="kpi-value" id="kpi-likely">—</div>
-      <div class="kpi-sub" id="kpi-likely-pct">—% of pipeline</div>
+      <div class="kpi-label">At Risk</div>
+      <div class="kpi-value" id="k-atrisk">—</div>
+      <div class="kpi-sub" id="k-atrisk-n">— accounts</div>
+    </div>
+    <div class="kpi green">
+      <div class="kpi-label">Closed Won</div>
+      <div class="kpi-value" id="k-cw">—</div>
+      <div class="kpi-sub" id="k-cw-n">— accounts</div>
     </div>
     <div class="kpi red">
-      <div class="kpi-label">At Risk</div>
-      <div class="kpi-value" id="kpi-atrisk">—</div>
-      <div class="kpi-sub" id="kpi-atrisk-pct">—% of pipeline</div>
+      <div class="kpi-label">Closed Lost</div>
+      <div class="kpi-value" id="k-cl">—</div>
+      <div class="kpi-sub" id="k-cl-n">— accounts</div>
     </div>
-    <div class="kpi purple">
-      <div class="kpi-label">Expansion Pipeline</div>
-      <div class="kpi-value" id="kpi-expansion">—</div>
-      <div class="kpi-sub" id="kpi-expansion-sub">— high-opportunity accounts</div>
+    <div class="kpi teal">
+      <div class="kpi-label">Win Rate</div>
+      <div class="kpi-value" id="k-wr">—</div>
+      <div class="kpi-sub">Closed Won / (Won + Lost)</div>
     </div>
   </div>
 
-  <!-- CHARTS ROW -->
+  <!-- ── SECTION 2: FORECAST vs ACTUALS ── -->
+  <div class="section-label">Forecast vs Actuals</div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+
+    <!-- Forecasted (pipeline) -->
+    <div>
+      <div style="font-size:10px;color:var(--blue);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">
+        Forecasted — Open Pipeline
+      </div>
+      <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr);gap:10px">
+        <div class="kpi blue">
+          <div class="kpi-label">Starting ARR</div>
+          <div class="kpi-value" id="k-pbase">—</div>
+          <div class="kpi-sub">Base ARR in pipe</div>
+        </div>
+        <div class="kpi purple">
+          <div class="kpi-label">Forecast ARR</div>
+          <div class="kpi-value" id="k-farr">—</div>
+          <div class="kpi-sub" id="k-fnrr">NRR —%</div>
+        </div>
+        <div class="kpi" id="k-fdelta-card">
+          <div class="kpi-label">Forecast Delta</div>
+          <div class="kpi-value" id="k-fdelta">—</div>
+          <div class="kpi-sub">vs starting ARR</div>
+        </div>
+        <div class="kpi orange">
+          <div class="kpi-label">Forecast Expansion</div>
+          <div class="kpi-value" id="k-fexp">—</div>
+          <div class="kpi-sub">Upsell potential</div>
+        </div>
+        <div class="kpi yellow">
+          <div class="kpi-label">Forecast NRR %</div>
+          <div class="kpi-value" id="k-fnrr2">—</div>
+          <div class="kpi-sub">of total book base</div>
+        </div>
+        <div class="kpi red">
+          <div class="kpi-label">At Risk ARR</div>
+          <div class="kpi-value" id="k-atrisk2">—</div>
+          <div class="kpi-sub">Stage = At Risk</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Actuals (closed) -->
+    <div>
+      <div style="font-size:10px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">
+        Actuals — Closed Deals
+      </div>
+      <div class="kpi-grid" style="grid-template-columns:repeat(3,1fr);gap:10px">
+        <div class="kpi green">
+          <div class="kpi-label">Closed Won ARR</div>
+          <div class="kpi-value" id="k-cw2">—</div>
+          <div class="kpi-sub" id="k-anrr">NRR —%</div>
+        </div>
+        <div class="kpi teal">
+          <div class="kpi-label">Actual NRR %</div>
+          <div class="kpi-value" id="k-anrr2">—</div>
+          <div class="kpi-sub">of total book base</div>
+        </div>
+        <div class="kpi" id="k-adelta-card">
+          <div class="kpi-label">Actual Delta ARR</div>
+          <div class="kpi-value" id="k-adelta">—</div>
+          <div class="kpi-sub">Won delta vs base</div>
+        </div>
+        <div class="kpi orange">
+          <div class="kpi-label">Actual Expansion</div>
+          <div class="kpi-value" id="k-aexp">—</div>
+          <div class="kpi-sub">Upsells closed</div>
+        </div>
+        <div class="kpi red">
+          <div class="kpi-label">Closed Lost ARR</div>
+          <div class="kpi-value" id="k-cl2">—</div>
+          <div class="kpi-sub">Churned ARR</div>
+        </div>
+        <div class="kpi white">
+          <div class="kpi-label">Win Rate</div>
+          <div class="kpi-value" id="k-wr2">—</div>
+          <div class="kpi-sub">Won / (Won + Lost)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── CHARTS ── -->
   <div class="charts-row">
     <div class="chart-card">
-      <h3>Forecast Category</h3>
-      <div class="chart-wrap"><canvas id="chartForecast"></canvas></div>
+      <h3>Pipeline Breakdown</h3>
+      <div class="chart-wrap"><canvas id="chartBook"></canvas></div>
     </div>
     <div class="chart-card">
-      <h3>Risk Level Distribution</h3>
+      <h3>Risk Distribution</h3>
       <div class="chart-wrap"><canvas id="chartRisk"></canvas></div>
     </div>
     <div class="chart-card">
-      <h3>ARR by Renewal Month</h3>
+      <h3>ARR by Renewal Month (Pipeline)</h3>
       <div class="chart-wrap"><canvas id="chartTimeline"></canvas></div>
     </div>
   </div>
 
-  <!-- TOP RISK PATTERNS -->
+  <!-- ── RISK PATTERNS ── -->
   <div class="risk-patterns">
-    <h3>Top Risk Patterns Across Portfolio</h3>
+    <h3>Top Risk Patterns — Pipeline</h3>
     <div class="pattern-list" id="pattern-list"></div>
   </div>
 
-  <!-- FILTERS -->
+  <!-- ── FILTERS ── -->
   <div class="filters">
-    <div class="filter-group">
+    <div class="filter-group wide">
       <label>Search Account</label>
       <input type="text" id="search-input" placeholder="Type account name…"/>
     </div>
@@ -228,12 +313,18 @@
       <select id="filter-csm"><option value="">All CSMs</option></select>
     </div>
     <div class="filter-group">
-      <label>Forecast Category</label>
-      <select id="filter-forecast">
-        <option value="">All</option>
-        <option value="Committed">Committed</option>
-        <option value="Likely">Likely</option>
+      <label>Stage</label>
+      <select id="filter-stage">
+        <option value="">All Stages</option>
+        <option value="Contract Out For Signature">Contract Out For Sig</option>
+        <option value="Pending Finance">Pending Finance</option>
+        <option value="Verbal Confirmation">Verbal Confirmation</option>
+        <option value="Renewal Outreach">Renewal Outreach</option>
+        <option value="Scoping">Scoping</option>
+        <option value="Non Responsive">Non Responsive</option>
         <option value="At Risk">At Risk</option>
+        <option value="Closed Won">Closed Won</option>
+        <option value="Closed Lost">Closed Lost</option>
       </select>
     </div>
     <div class="filter-group">
@@ -243,6 +334,19 @@
         <option value="High">High</option>
         <option value="Medium">Medium</option>
         <option value="Low">Low</option>
+        <option value="Closed Won">Closed Won</option>
+        <option value="Closed Lost">Closed Lost</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label>Forecast Cat.</label>
+      <select id="filter-forecast">
+        <option value="">All</option>
+        <option value="Committed">Committed</option>
+        <option value="Likely">Likely</option>
+        <option value="At Risk">At Risk</option>
+        <option value="Closed Won">Closed Won</option>
+        <option value="Closed Lost">Closed Lost</option>
       </select>
     </div>
     <div class="filter-group">
@@ -254,8 +358,8 @@
       </select>
     </div>
     <div class="filter-group">
-      <label>Renewal Month</label>
-      <select id="filter-month"><option value="">All Months</option></select>
+      <label>Renewal Quarter</label>
+      <select id="filter-quarter"><option value="">All Quarters</option></select>
     </div>
     <div class="filter-group">
       <label>Expansion</label>
@@ -266,32 +370,38 @@
         <option value="Low">Low</option>
       </select>
     </div>
-    <button class="btn-reset" onclick="resetFilters()">Reset Filters</button>
+    <button class="btn-reset" onclick="resetFilters()">Clear All</button>
   </div>
 
-  <!-- ACCOUNT TABLE -->
+  <!-- ── TABLE ── -->
   <div class="table-wrap">
     <div class="table-header">
-      <h3>Account-Level Renewal Forecast</h3>
-      <div class="count" id="row-count">Loading…</div>
+      <h3>All Accounts — Renewal Forecast</h3>
+      <div style="display:flex;align-items:center;gap:12px">
+        <span class="count" id="row-count">Loading…</span>
+        <button class="export-btn" onclick="exportCSV()">↓ Export CSV</button>
+      </div>
     </div>
     <div class="table-scroll">
       <table id="forecast-table">
         <thead>
           <tr>
-            <th onclick="sortTable('Account_Name')"          >Account</th>
-            <th onclick="sortTable('CSM')"                   >CSM</th>
-            <th onclick="sortTable('Segment')"               >Segment</th>
-            <th onclick="sortTable('ARR')"                   >ARR</th>
-            <th onclick="sortTable('Renewal_Date')"          >Renewal Date</th>
-            <th onclick="sortTable('Days_to_Renewal')"       >Days Left</th>
-            <th onclick="sortTable('Renewal_Probability')"   >Probability</th>
-            <th onclick="sortTable('Risk_Level')"            >Risk</th>
-            <th onclick="sortTable('Primary_Risk_Driver')"   >Risk Driver</th>
-            <th onclick="sortTable('Forecast_Category')"     >Forecast</th>
-            <th onclick="sortTable('Usage_Trend')"           >Usage</th>
-            <th onclick="sortTable('Expansion_Likelihood')"  >Expansion</th>
-            <th>Recommended Action</th>
+            <th onclick="sortTable('Account_Name')">Account</th>
+            <th onclick="sortTable('CSM')">CSM</th>
+            <th onclick="sortTable('Stage')">Stage</th>
+            <th onclick="sortTable('ARR')">ARR</th>
+            <th onclick="sortTable('Base_ARR')">Base ARR</th>
+            <th onclick="sortTable('Forecast_ARR')">Forecast ARR</th>
+            <th onclick="sortTable('Delta_ARR')">Delta ARR</th>
+            <th onclick="sortTable('Renewal_Date')">Renewal Date</th>
+            <th onclick="sortTable('Days_to_Renewal')">Days Left</th>
+            <th onclick="sortTable('Renewal_Probability')">Probability</th>
+            <th onclick="sortTable('Risk_Level')">Risk</th>
+            <th onclick="sortTable('Primary_Risk_Driver')">Risk Driver</th>
+            <th onclick="sortTable('Forecast_Category')">Forecast Cat.</th>
+            <th onclick="sortTable('Usage_Trend')">Usage Trend</th>
+            <th onclick="sortTable('Expansion_Likelihood')">Expansion</th>
+            <th>Action</th>
           </tr>
         </thead>
         <tbody id="table-body"></tbody>
@@ -302,121 +412,173 @@
 </div>
 
 <div class="footer">
-  Built by <span>Uniqode RevOps AI</span> · Powered by Salesforce + Metabase + Intercom signals ·
-  Forecast as of <span>May 05, 2026 at 01:08 PM</span> · Refresh CSV and re-run generator to update
+  Built by <span>Uniqode RevOps AI</span> · Salesforce + Metabase + Intercom ·
+  As of <span>May 05, 2026 at 02:30 PM</span>
 </div>
 
 <script>
-// ── embedded data ─────────────────────────────────────────────────────────────
-const RAW_DATA = [{"Account_Name": "Lmd Agency", "Customer_ID": "cus_L4YS0ci8qOZzlg", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 10200.0, "Renewal_Date": "04/03/2026", "Days_to_Renewal": -32, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 44, "Risk_Level": "High", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Push contract now; secure signature or extension today"}, {"Account_Name": "Exchange Technology Services", "Customer_ID": "cus_RQKVmaLC1iMY8w", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 3500.0, "Renewal_Date": "04/15/2026", "Days_to_Renewal": -20, "Stage": "At Risk", "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 5, "Risk_Level": "High", "Primary_Risk_Driver": "Support Escalations", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Escalate tickets; CSM to personally follow up today"}, {"Account_Name": "Balon", "Customer_ID": "cus_MpCUTSEbr8MNch", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 5000.0, "Renewal_Date": "04/27/2026", "Days_to_Renewal": -8, "Stage": "At Risk", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 5, "Risk_Level": "High", "Primary_Risk_Driver": "Support Escalations", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Escalate tickets; CSM to personally follow up today"}, {"Account_Name": "Centene Management Company, LLC", "Customer_ID": "cus_NpQcNRpI0RKajL", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 5000.0, "Renewal_Date": "04/28/2026", "Days_to_Renewal": -7, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 44, "Risk_Level": "High", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Push contract now; secure signature or extension today"}, {"Account_Name": "Florida Beer", "Customer_ID": "cus_JMAll2emGidKgc", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 10000.0, "Renewal_Date": "04/28/2026", "Days_to_Renewal": -7, "Stage": "At Risk", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 5, "Risk_Level": "High", "Primary_Risk_Driver": "Support Escalations", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Escalate tickets; CSM to personally follow up today"}, {"Account_Name": "General Dynamics Electric Boat", "Customer_ID": "cus_MVk59W5NfnxyIO", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 15750.0, "Renewal_Date": "05/04/2026", "Days_to_Renewal": -1, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 44, "Risk_Level": "High", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Push contract now; secure signature or extension today"}, {"Account_Name": "TGIT PTE LTD", "Customer_ID": "cus_MxDQRzprfDByXB", "CSM": "George Moser", "Segment": "Business", "ARR": 3000.0, "Renewal_Date": "05/14/2026", "Days_to_Renewal": 9, "Stage": "Non Responsive", "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 18, "Risk_Level": "High", "Primary_Risk_Driver": "No Recent Activity", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Send urgent alert; escalate to decision-maker today"}, {"Account_Name": "Econet Wireless Zimbabwe", "Customer_ID": "cus_JVlZECeUtm0zM4", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 8240.0, "Renewal_Date": "05/19/2026", "Days_to_Renewal": 14, "Stage": "Scoping", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 39, "Risk_Level": "High", "Primary_Risk_Driver": "Low Feature Adoption", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Book urgent training; drive adoption before renewal date"}, {"Account_Name": "Illinois Army National Guard", "Customer_ID": "cus_IfTeaNc5B6Xz12", "CSM": "George Moser", "Segment": "Business", "ARR": 8600.0, "Renewal_Date": "05/28/2026", "Days_to_Renewal": 23, "Stage": "Non Responsive", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 26, "Risk_Level": "High", "Primary_Risk_Driver": "No Recent Activity", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Send urgent alert; escalate to decision-maker today"}, {"Account_Name": "Power Parking / Dash Marketing Group", "Customer_ID": "cus_NeqIfmwTVV7sYh", "CSM": "Nathalli Ibarra", "Segment": "Enterprise", "ARR": 20817.0, "Renewal_Date": "05/28/2026", "Days_to_Renewal": 23, "Stage": "At Risk", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 17, "Risk_Level": "High", "Primary_Risk_Driver": "Support Escalations", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Escalate tickets; CSM to personally follow up today"}, {"Account_Name": "My Clinic", "Customer_ID": "cus_SAitStP2u5B5pN", "CSM": "George Moser", "Segment": "Business", "ARR": 5000.0, "Renewal_Date": "05/30/2026", "Days_to_Renewal": 25, "Stage": "At Risk", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 17, "Risk_Level": "High", "Primary_Risk_Driver": "Support Escalations", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Escalate tickets; CSM to personally follow up today"}, {"Account_Name": "Imagination", "Customer_ID": "cus_IKVxq9QBSt7DZk", "CSM": "George Moser", "Segment": "Business", "ARR": 7500.0, "Renewal_Date": "06/02/2026", "Days_to_Renewal": 28, "Stage": "At Risk", "Usage_Trend": "Decreasing", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 12, "Risk_Level": "High", "Primary_Risk_Driver": "Support Escalations", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Low", "Recommended_Action": "Escalate tickets; CSM to personally follow up today"}, {"Account_Name": "World Rugby", "Customer_ID": "cus_LIQdzYIQhgb4iD", "CSM": "George Moser", "Segment": "Business", "ARR": 5000.0, "Renewal_Date": "06/03/2026", "Days_to_Renewal": 29, "Stage": "Non Responsive", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 26, "Risk_Level": "High", "Primary_Risk_Driver": "No Recent Activity", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Send urgent alert; escalate to decision-maker today"}, {"Account_Name": "Linen Chest", "Customer_ID": "cus_O1pHGdyJDxLptX", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 10500.0, "Renewal_Date": "06/04/2026", "Days_to_Renewal": 30, "Stage": "Scoping", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 47, "Risk_Level": "High", "Primary_Risk_Driver": "Low Feature Adoption", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Book urgent training; drive adoption before renewal date"}, {"Account_Name": "Frame My TV", "Customer_ID": "cus_OwPuCZ1kYbUCvh", "CSM": "George Moser", "Segment": "Business", "ARR": 4000.0, "Renewal_Date": "06/25/2026", "Days_to_Renewal": 51, "Stage": "Non Responsive", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 26, "Risk_Level": "High", "Primary_Risk_Driver": "No Recent Activity", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Send urgent alert; escalate to decision-maker today"}, {"Account_Name": "Tulsa Teachers Credit Union", "Customer_ID": "cus_SZWAvXXLHkf1nT", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 2700.0, "Renewal_Date": "06/25/2026", "Days_to_Renewal": 51, "Stage": "Scoping", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 80.0, "Renewal_Probability": 47, "Risk_Level": "High", "Primary_Risk_Driver": "Low Feature Adoption", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Book urgent training; drive adoption before renewal date"}, {"Account_Name": "Loyola Marymount University", "Customer_ID": "cus_LyOD31ysfXnRJG", "CSM": "George Moser", "Segment": "Business", "ARR": 10302.0, "Renewal_Date": "06/29/2026", "Days_to_Renewal": 55, "Stage": "Non Responsive", "Usage_Trend": "Increasing", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 1020.0, "Renewal_Probability": 29, "Risk_Level": "High", "Primary_Risk_Driver": "No Recent Activity", "Forecast_Category": "At Risk", "Expansion_Likelihood": "High", "Recommended_Action": "Send urgent alert; escalate to decision-maker today"}, {"Account_Name": "Colorado National Guard", "Customer_ID": "cus_GzNKMCeKifpadG", "CSM": "George Moser", "Segment": "Business", "ARR": 5120.0, "Renewal_Date": "04/11/2026", "Days_to_Renewal": -24, "Stage": "Verbal Confirmation", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Netspend", "Customer_ID": "cus_KFDPm9dvhzX3nc", "CSM": "George Moser", "Segment": "Business", "ARR": 11880.0, "Renewal_Date": "04/26/2026", "Days_to_Renewal": -9, "Stage": "Verbal Confirmation", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Springfield Clinic", "Customer_ID": "cus_JR1nKcxKduZ7cG", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 5000.0, "Renewal_Date": "05/05/2026", "Days_to_Renewal": 0, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Sensiba LLP", "Customer_ID": "cus_PhD44WVJeOEVPz", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 7700.0, "Renewal_Date": "05/08/2026", "Days_to_Renewal": 3, "Stage": "Verbal Confirmation", "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Expansion_Opportunities_Value": 200.0, "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Rawlings Sporting Goods Co., Inc.", "Customer_ID": "cus_Lci6pcr2qYgYTF", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 6500.0, "Renewal_Date": "05/08/2026", "Days_to_Renewal": 3, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "DSI Digital", "Customer_ID": "cus_RoHEPtJY0eiJr8", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 5000.0, "Renewal_Date": "05/11/2026", "Days_to_Renewal": 6, "Stage": "Verbal Confirmation", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Eisenhower Health", "Customer_ID": "cus_Lg32xquqwi39yX", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 9000.0, "Renewal_Date": "05/11/2026", "Days_to_Renewal": 6, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "The St. Regis Aruba Resort", "Customer_ID": "cus_SL70mdlIozqzAJ", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 5000.0, "Renewal_Date": "05/13/2026", "Days_to_Renewal": 8, "Stage": "Verbal Confirmation", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Sports Thread", "Customer_ID": "cus_GboAJr98Z8oLrA", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 7875.0, "Renewal_Date": "05/13/2026", "Days_to_Renewal": 8, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "AVEVA Software, LLC", "Customer_ID": "cus_NKjdCwCugZA99k", "CSM": "Sedondra Ellis", "Segment": "Enterprise", "ARR": 51250.0, "Renewal_Date": "05/22/2026", "Days_to_Renewal": 17, "Stage": "Verbal Confirmation", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Eastern Bank", "Customer_ID": "cus_JXk5TtWoDb2ydf", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 10500.0, "Renewal_Date": "05/23/2026", "Days_to_Renewal": 18, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Pete Kardiasmenos", "Customer_ID": "cus_SOA26k0Y1cO9AV", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 2500.0, "Renewal_Date": "05/26/2026", "Days_to_Renewal": 21, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Canada Beef", "Customer_ID": "cus_JYjl0oDLvVhdL2", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 11750.0, "Renewal_Date": "05/26/2026", "Days_to_Renewal": 21, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "P.B. Bell Companies", "Customer_ID": "cus_RlFzyUhbTZq30j", "CSM": "George Moser", "Segment": "Business", "ARR": 5680.0, "Renewal_Date": "05/27/2026", "Days_to_Renewal": 22, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Bonita Bay Community Association", "Customer_ID": "cus_SOz8nMbhYxk2X5", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 7000.0, "Renewal_Date": "05/29/2026", "Days_to_Renewal": 24, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Jostens", "Customer_ID": "cus_KGOrLFTXE9IpWl", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 5000.0, "Renewal_Date": "06/03/2026", "Days_to_Renewal": 29, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "KTGY", "Customer_ID": "cus_PuI7NkT5hzSugA", "CSM": "George Moser", "Segment": "Business", "ARR": 7500.0, "Renewal_Date": "06/10/2026", "Days_to_Renewal": 36, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "QK", "Customer_ID": "cus_SWSoch6BDXH9E0", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 5420.0, "Renewal_Date": "06/16/2026", "Days_to_Renewal": 42, "Stage": "Verbal Confirmation", "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "ABC Supply Co. Inc.", "Customer_ID": "cus_POrPv3nfP19XXG", "CSM": "Sedondra Ellis", "Segment": "Enterprise", "ARR": 40000.0, "Renewal_Date": "06/19/2026", "Days_to_Renewal": 45, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Rauch", "Customer_ID": "cus_Jl8n9xrjwUQDPw", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 11000.0, "Renewal_Date": "06/20/2026", "Days_to_Renewal": 46, "Stage": "Verbal Confirmation", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "The TJX Companies, Inc.", "Customer_ID": "cus_Q6ej5xPaDXnd4s", "CSM": "George Moser", "Segment": "Enterprise", "ARR": 25000.0, "Renewal_Date": "06/23/2026", "Days_to_Renewal": 49, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Boston Scientific", "Customer_ID": "cus_MMUVyUiZP9AYIr", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 5000.0, "Renewal_Date": "06/23/2026", "Days_to_Renewal": 49, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Larwel Industries", "Customer_ID": "cus_QFE9DA1dr6eE7J", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 6400.0, "Renewal_Date": "06/25/2026", "Days_to_Renewal": 51, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Avanti West Coast - RDG", "Customer_ID": "cus_O7qOfz67c9QCaE", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 15000.0, "Renewal_Date": "06/26/2026", "Days_to_Renewal": 52, "Stage": "Verbal Confirmation", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "L'OREAL", "Customer_ID": "cus_SRyK01BvJB5EKw", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 8000.0, "Renewal_Date": "06/26/2026", "Days_to_Renewal": 52, "Stage": "Verbal Confirmation", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Polaris", "Customer_ID": "cus_QNUdI9glJyVsaI", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 9000.0, "Renewal_Date": "06/27/2026", "Days_to_Renewal": 53, "Stage": "Verbal Confirmation", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Invictus Blue", "Customer_ID": "cus_Quafp6Y3GxU58b", "CSM": "George Moser", "Segment": "Business", "ARR": 5000.0, "Renewal_Date": "06/29/2026", "Days_to_Renewal": 55, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Viega", "Customer_ID": "cus_JWdcoDp795dDvE", "CSM": "George Moser", "Segment": "Business", "ARR": 10200.0, "Renewal_Date": "06/29/2026", "Days_to_Renewal": 55, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "RC Willey", "Customer_ID": "cus_QFb2ERz3Wp4IlS", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 2500.0, "Renewal_Date": "06/29/2026", "Days_to_Renewal": 55, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Eataly", "Customer_ID": "cus_O5VcSoEFkjrLqW", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 11340.0, "Renewal_Date": "06/29/2026", "Days_to_Renewal": 55, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "SVP Worldwide", "Customer_ID": "cus_JaGnZVzwXZoOPB", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 5000.0, "Renewal_Date": "06/30/2026", "Days_to_Renewal": 56, "Stage": "Renewal Outreach", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Virgin Media O2", "Customer_ID": "cus_Pqqtw83gUJfhQB", "CSM": "Sedondra Ellis", "Segment": "Enterprise", "ARR": 25000.0, "Renewal_Date": "04/01/2026", "Days_to_Renewal": -34, "Stage": "Closed Won", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 95, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Federal Express Corporation", "Customer_ID": "cus_MT4btrtVRaNDAf", "CSM": "George Moser", "Segment": "Enterprise", "ARR": 60000.0, "Renewal_Date": "04/04/2026", "Days_to_Renewal": -31, "Stage": "Closed Won", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 95, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "The Sixth Floor Museum", "Customer_ID": "cus_RxdzjLNTFFUheQ", "CSM": "George Moser", "Segment": "Business", "ARR": 5000.0, "Renewal_Date": "04/06/2026", "Days_to_Renewal": -29, "Stage": "Closed Won", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 95, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Happy Flap", "Customer_ID": "cus_Hent1WD2HxQtZf", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 4500.0, "Renewal_Date": "04/07/2026", "Days_to_Renewal": -28, "Stage": "Closed Won", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 95, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Sage", "Customer_ID": "cus_S8YhyGM9J5l9x6", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 5600.0, "Renewal_Date": "04/14/2026", "Days_to_Renewal": -21, "Stage": "Closed Won", "Usage_Trend": "Increasing", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 600.0, "Renewal_Probability": 95, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "High", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Teaching Strategies", "Customer_ID": "cus_PvnE9z1l5tiIWc", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 7000.0, "Renewal_Date": "04/14/2026", "Days_to_Renewal": -21, "Stage": "Closed Won", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 95, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Tumi", "Customer_ID": "cus_O1og6fGidPecpd", "CSM": "George Moser", "Segment": "Enterprise", "ARR": 25000.0, "Renewal_Date": "04/16/2026", "Days_to_Renewal": -19, "Stage": "Closed Won", "Usage_Trend": "Decreasing", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 95, "Risk_Level": "Low", "Primary_Risk_Driver": "Low Usage", "Forecast_Category": "Committed", "Expansion_Likelihood": "Low", "Recommended_Action": "Share usage insights; propose plan optimization call"}, {"Account_Name": "Washington Metropolitan Area Transit Authority", "Customer_ID": "cus_LXOFt1333SOIwt", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 10560.0, "Renewal_Date": "04/18/2026", "Days_to_Renewal": -17, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Navy Federal Credit Union", "Customer_ID": "cus_LY9LodTH9fl98t", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 11250.0, "Renewal_Date": "04/20/2026", "Days_to_Renewal": -15, "Stage": "Closed Won", "Usage_Trend": "Increasing", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 750.0, "Renewal_Probability": 95, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "High", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Highmark Health", "Customer_ID": "cus_SDnbALkC93rRvy", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 6000.0, "Renewal_Date": "04/21/2026", "Days_to_Renewal": -14, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "TePe", "Customer_ID": "cus_NruUZiifto6qNh", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 3848.0, "Renewal_Date": "04/23/2026", "Days_to_Renewal": -12, "Stage": "Closed Won", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 95, "Risk_Level": "Low", "Primary_Risk_Driver": "Low Usage", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Share usage insights; propose plan optimization call"}, {"Account_Name": "Convatec Limited", "Customer_ID": "cus_MzHhG5cjrmD0kA", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 5000.0, "Renewal_Date": "04/24/2026", "Days_to_Renewal": -11, "Stage": "Closed Won", "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 95, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "STADA AG", "Customer_ID": "cus_PQ9TXOzLUyy6zk", "CSM": "George Moser", "Segment": "Enterprise", "ARR": 50000.0, "Renewal_Date": "04/25/2026", "Days_to_Renewal": -10, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes, Complete Suite", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Fidelity Investments Canada", "Customer_ID": "cus_JVOmirqjdLcpwu", "CSM": "George Moser", "Segment": "Business", "ARR": 11100.0, "Renewal_Date": "04/27/2026", "Days_to_Renewal": -8, "Stage": "Closed Won", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 95, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Mecklenburg County", "Customer_ID": "cus_Nm1rRBTp2PUKLa", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 9139.0, "Renewal_Date": "04/28/2026", "Days_to_Renewal": -7, "Stage": "Closed Won", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 95, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "PureCare", "Customer_ID": "cus_Ix6YQMb9Usb09W", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 9000.0, "Renewal_Date": "04/28/2026", "Days_to_Renewal": -7, "Stage": "Closed Won", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 95, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Equatorial Coca-Cola Bottling", "Customer_ID": "cus_MLiGj3InLz9pKh", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 8500.0, "Renewal_Date": "04/28/2026", "Days_to_Renewal": -7, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Embraer Executive Aircraft, Inc.", "Customer_ID": "cus_ShiiebWnLxALgn", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 5000.0, "Renewal_Date": "04/29/2026", "Days_to_Renewal": -6, "Stage": "Closed Won", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 95, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "PerkSpot", "Customer_ID": "cus_LdNasRVLkwTrYt", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 10620.0, "Renewal_Date": "05/04/2026", "Days_to_Renewal": -1, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "General Electric Company", "Customer_ID": "cus_SHYbftpx9iJVYU", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 6800.0, "Renewal_Date": "05/08/2026", "Days_to_Renewal": 3, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Grace Management", "Customer_ID": "cus_SDRvkkQbnWGWnJ", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 5000.0, "Renewal_Date": "05/08/2026", "Days_to_Renewal": 3, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Plumbing Distributors", "Customer_ID": "cus_Q7iiulviebKxQF", "CSM": "George Moser", "Segment": "Business", "ARR": 6300.0, "Renewal_Date": "05/16/2026", "Days_to_Renewal": 11, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Ej Papadopoulos", "Customer_ID": "cus_SHXi789u5qyE8W", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 5000.0, "Renewal_Date": "05/16/2026", "Days_to_Renewal": 11, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "MedPro Group", "Customer_ID": "cus_NU0yOpNuWuuJhb", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 8000.0, "Renewal_Date": "05/21/2026", "Days_to_Renewal": 16, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "The RealReal", "Customer_ID": "cus_SMgSe8HZVxW2ge", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 5000.0, "Renewal_Date": "05/22/2026", "Days_to_Renewal": 17, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Visit Qatar", "Customer_ID": "cus_JXjiR4ajmmnuey", "CSM": "George Moser", "Segment": "Business", "ARR": 10000.0, "Renewal_Date": "05/23/2026", "Days_to_Renewal": 18, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Chervon North America", "Customer_ID": "cus_JaGv45zWXsXBf0", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 11550.0, "Renewal_Date": "05/30/2026", "Days_to_Renewal": 25, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Aruba Marriott Resort & Stellaris Casino", "Customer_ID": "cus_HKLGyNdVabtmyM", "CSM": "Nathalli Ibarra", "Segment": "Business", "ARR": 5250.0, "Renewal_Date": "05/31/2026", "Days_to_Renewal": 26, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Wealth Enhancement Group", "Customer_ID": "cus_SRYK6Gj9CbrDd8", "CSM": "George Moser", "Segment": "Business", "ARR": 5000.0, "Renewal_Date": "06/04/2026", "Days_to_Renewal": 30, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Designtex", "Customer_ID": "cus_HTOnLF1ivv8bxC", "CSM": "George Moser", "Segment": "Business", "ARR": 7500.0, "Renewal_Date": "06/17/2026", "Days_to_Renewal": 43, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Ohio Farmers Insurance Company", "Customer_ID": "cus_QJmZxHBqxQ6JAL", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 7612.0, "Renewal_Date": "06/17/2026", "Days_to_Renewal": 43, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes, Complete Suite", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Pittsburgh Paints Company", "Customer_ID": "cus_TS8iAidU62b1SN", "CSM": "George Moser", "Segment": "Business", "ARR": 5000.0, "Renewal_Date": "06/22/2026", "Days_to_Renewal": 48, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "HelloFresh AU", "Customer_ID": "cus_ICMozsZP63lxmD", "CSM": "Sedondra Ellis", "Segment": "Business", "ARR": 10740.0, "Renewal_Date": "06/23/2026", "Days_to_Renewal": 49, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "BrandSafway", "Customer_ID": "cus_SZUduADB7Nk9s4", "CSM": "George Moser", "Segment": "Business", "ARR": 5420.0, "Renewal_Date": "06/25/2026", "Days_to_Renewal": 51, "Stage": "Contract Out For Signature", "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Dulux Group", "Customer_ID": "cus_JW54kGLkkwqA5B", "CSM": "George Moser", "Segment": "Business", "ARR": 8920.0, "Renewal_Date": "06/27/2026", "Days_to_Renewal": 53, "Stage": "Contract Out For Signature", "Usage_Trend": "Increasing", "Key_Feature_Adoption": "QR Codes", "Expansion_Opportunities_Value": 520.0, "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "High", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}];
-const SUMMARY  = {"Total_ARR": "$656,996", "Committed_Revenue": "$198,772", "Likely_Revenue": "$323,115", "At_Risk_Revenue": "$135,109", "Top_3_Risk_Patterns": ["Renewal Timing Risk", "Support Escalations", "No Recent Activity"], "_raw": {"total": 656996.0, "committed": 198772.0, "likely": 323115.0, "at_risk": 135109.0}};
+const RAW_DATA = [{"Account_Name": "Lmd Agency", "Customer_ID": "cus_L4YS0ci8qOZzlg", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 10200.0, "Base_ARR": 10200.0, "Forecast_ARR": 10200.0, "Delta_ARR": 0.0, "Renewal_Date": "04/03/2026", "Days_to_Renewal": -32, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 44, "Risk_Level": "High", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Push contract now; secure signature or extension today"}, {"Account_Name": "Colorado National Guard", "Customer_ID": "cus_GzNKMCeKifpadG", "CSM": "George Moser", "Segment": "Business", "Stage": "Verbal Confirmation", "ARR": 5120.0, "Base_ARR": 5120.0, "Forecast_ARR": 5120.0, "Delta_ARR": 0.0, "Renewal_Date": "04/11/2026", "Days_to_Renewal": -24, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Exchange Technology Services", "Customer_ID": "cus_RQKVmaLC1iMY8w", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "At Risk", "ARR": 3500.0, "Base_ARR": 3500.0, "Forecast_ARR": 3500.0, "Delta_ARR": 0.0, "Renewal_Date": "04/15/2026", "Days_to_Renewal": -20, "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Renewal_Probability": 5, "Risk_Level": "High", "Primary_Risk_Driver": "Support Escalations", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Escalate tickets; CSM to personally follow up today"}, {"Account_Name": "Washington Metropolitan Area Transit Authority", "Customer_ID": "cus_LXOFt1333SOIwt", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 10560.0, "Base_ARR": 10560.0, "Forecast_ARR": 10560.0, "Delta_ARR": 0.0, "Renewal_Date": "04/18/2026", "Days_to_Renewal": -17, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Highmark Health", "Customer_ID": "cus_SDnbALkC93rRvy", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 6000.0, "Base_ARR": 6000.0, "Forecast_ARR": 6000.0, "Delta_ARR": 0.0, "Renewal_Date": "04/21/2026", "Days_to_Renewal": -14, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "STADA AG", "Customer_ID": "cus_PQ9TXOzLUyy6zk", "CSM": "George Moser", "Segment": "Enterprise", "Stage": "Contract Out For Signature", "ARR": 50000.0, "Base_ARR": 50000.0, "Forecast_ARR": 50000.0, "Delta_ARR": 0.0, "Renewal_Date": "04/25/2026", "Days_to_Renewal": -10, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Netspend", "Customer_ID": "cus_KFDPm9dvhzX3nc", "CSM": "George Moser", "Segment": "Business", "Stage": "Verbal Confirmation", "ARR": 11880.0, "Base_ARR": 11880.0, "Forecast_ARR": 11880.0, "Delta_ARR": 0.0, "Renewal_Date": "04/26/2026", "Days_to_Renewal": -9, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Balon", "Customer_ID": "cus_MpCUTSEbr8MNch", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "At Risk", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 5000.0, "Delta_ARR": 0.0, "Renewal_Date": "04/27/2026", "Days_to_Renewal": -8, "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Renewal_Probability": 5, "Risk_Level": "High", "Primary_Risk_Driver": "Support Escalations", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Escalate tickets; CSM to personally follow up today"}, {"Account_Name": "Centene Management Company, LLC", "Customer_ID": "cus_NpQcNRpI0RKajL", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 5000.0, "Delta_ARR": 0.0, "Renewal_Date": "04/28/2026", "Days_to_Renewal": -7, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 44, "Risk_Level": "High", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Push contract now; secure signature or extension today"}, {"Account_Name": "Florida Beer", "Customer_ID": "cus_JMAll2emGidKgc", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "At Risk", "ARR": 10000.0, "Base_ARR": 10000.0, "Forecast_ARR": 10000.0, "Delta_ARR": 0.0, "Renewal_Date": "04/28/2026", "Days_to_Renewal": -7, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 5, "Risk_Level": "High", "Primary_Risk_Driver": "Support Escalations", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Escalate tickets; CSM to personally follow up today"}, {"Account_Name": "Equatorial Coca-Cola Bottling", "Customer_ID": "cus_MLiGj3InLz9pKh", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 8500.0, "Base_ARR": 8500.0, "Forecast_ARR": 8500.0, "Delta_ARR": 0.0, "Renewal_Date": "04/28/2026", "Days_to_Renewal": -7, "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "General Dynamics Electric Boat", "Customer_ID": "cus_MVk59W5NfnxyIO", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 15750.0, "Base_ARR": 15750.0, "Forecast_ARR": 15750.0, "Delta_ARR": 0.0, "Renewal_Date": "05/04/2026", "Days_to_Renewal": -1, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 44, "Risk_Level": "High", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Push contract now; secure signature or extension today"}, {"Account_Name": "PerkSpot", "Customer_ID": "cus_LdNasRVLkwTrYt", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 10620.0, "Base_ARR": 10620.0, "Forecast_ARR": 10620.0, "Delta_ARR": 0.0, "Renewal_Date": "05/04/2026", "Days_to_Renewal": -1, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Springfield Clinic", "Customer_ID": "cus_JR1nKcxKduZ7cG", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 5000.0, "Delta_ARR": 0.0, "Renewal_Date": "05/05/2026", "Days_to_Renewal": 0, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "General Electric Company", "Customer_ID": "cus_SHYbftpx9iJVYU", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 6800.0, "Base_ARR": 6800.0, "Forecast_ARR": 6800.0, "Delta_ARR": 0.0, "Renewal_Date": "05/08/2026", "Days_to_Renewal": 3, "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Grace Management", "Customer_ID": "cus_SDRvkkQbnWGWnJ", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 5000.0, "Delta_ARR": 0.0, "Renewal_Date": "05/08/2026", "Days_to_Renewal": 3, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Sensiba LLP", "Customer_ID": "cus_PhD44WVJeOEVPz", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Verbal Confirmation", "ARR": 7700.0, "Base_ARR": 7500.0, "Forecast_ARR": 7700.0, "Delta_ARR": 200.0, "Renewal_Date": "05/08/2026", "Days_to_Renewal": 3, "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Rawlings Sporting Goods Co., Inc.", "Customer_ID": "cus_Lci6pcr2qYgYTF", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 6500.0, "Base_ARR": 6500.0, "Forecast_ARR": 6500.0, "Delta_ARR": 0.0, "Renewal_Date": "05/08/2026", "Days_to_Renewal": 3, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "DSI Digital", "Customer_ID": "cus_RoHEPtJY0eiJr8", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Verbal Confirmation", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 5000.0, "Delta_ARR": 0.0, "Renewal_Date": "05/11/2026", "Days_to_Renewal": 6, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Eisenhower Health", "Customer_ID": "cus_Lg32xquqwi39yX", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 9000.0, "Base_ARR": 9000.0, "Forecast_ARR": 9000.0, "Delta_ARR": 0.0, "Renewal_Date": "05/11/2026", "Days_to_Renewal": 6, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "The St. Regis Aruba Resort", "Customer_ID": "cus_SL70mdlIozqzAJ", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Verbal Confirmation", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 5000.0, "Delta_ARR": 0.0, "Renewal_Date": "05/13/2026", "Days_to_Renewal": 8, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Sports Thread", "Customer_ID": "cus_GboAJr98Z8oLrA", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 7875.0, "Base_ARR": 7875.0, "Forecast_ARR": 7875.0, "Delta_ARR": 0.0, "Renewal_Date": "05/13/2026", "Days_to_Renewal": 8, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "TGIT PTE LTD", "Customer_ID": "cus_MxDQRzprfDByXB", "CSM": "George Moser", "Segment": "Business", "Stage": "Non Responsive", "ARR": 3000.0, "Base_ARR": 3000.0, "Forecast_ARR": 3000.0, "Delta_ARR": 0.0, "Renewal_Date": "05/14/2026", "Days_to_Renewal": 9, "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Renewal_Probability": 18, "Risk_Level": "High", "Primary_Risk_Driver": "No Recent Activity", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Send urgent alert; escalate to decision-maker today"}, {"Account_Name": "Plumbing Distributors", "Customer_ID": "cus_Q7iiulviebKxQF", "CSM": "George Moser", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 6300.0, "Base_ARR": 6300.0, "Forecast_ARR": 6300.0, "Delta_ARR": 0.0, "Renewal_Date": "05/15/2026", "Days_to_Renewal": 10, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Ej Papadopoulos", "Customer_ID": "cus_SHXi789u5qyE8W", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 5000.0, "Delta_ARR": 0.0, "Renewal_Date": "05/16/2026", "Days_to_Renewal": 11, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Econet Wireless Zimbabwe", "Customer_ID": "cus_JVlZECeUtm0zM4", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Scoping", "ARR": 8240.0, "Base_ARR": 8240.0, "Forecast_ARR": 8240.0, "Delta_ARR": 0.0, "Renewal_Date": "05/19/2026", "Days_to_Renewal": 14, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 47, "Risk_Level": "High", "Primary_Risk_Driver": "Low Feature Adoption", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Book urgent training; drive adoption before renewal date"}, {"Account_Name": "MedPro Group", "Customer_ID": "cus_NU0yOpNuWuuJhb", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 8000.0, "Base_ARR": 8000.0, "Forecast_ARR": 8000.0, "Delta_ARR": 0.0, "Renewal_Date": "05/21/2026", "Days_to_Renewal": 16, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "The RealReal", "Customer_ID": "cus_SMgSe8HZVxW2ge", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 5000.0, "Delta_ARR": 0.0, "Renewal_Date": "05/22/2026", "Days_to_Renewal": 17, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "AVEVA Software, LLC", "Customer_ID": "cus_NKjdCwCugZA99k", "CSM": "Sedondra Ellis", "Segment": "Enterprise", "Stage": "Verbal Confirmation", "ARR": 51250.0, "Base_ARR": 51250.0, "Forecast_ARR": 51250.0, "Delta_ARR": 0.0, "Renewal_Date": "05/22/2026", "Days_to_Renewal": 17, "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Visit Qatar", "Customer_ID": "cus_JXjiR4ajmmnuey", "CSM": "George Moser", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 10000.0, "Base_ARR": 10000.0, "Forecast_ARR": 10000.0, "Delta_ARR": 0.0, "Renewal_Date": "05/23/2026", "Days_to_Renewal": 18, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Eastern Bank", "Customer_ID": "cus_JXk5TtWoDb2ydf", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 10500.0, "Base_ARR": 10500.0, "Forecast_ARR": 10500.0, "Delta_ARR": 0.0, "Renewal_Date": "05/23/2026", "Days_to_Renewal": 18, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Pete Kardiasmenos", "Customer_ID": "cus_SOA26k0Y1cO9AV", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 2500.0, "Base_ARR": 2500.0, "Forecast_ARR": 2500.0, "Delta_ARR": 0.0, "Renewal_Date": "05/26/2026", "Days_to_Renewal": 21, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Canada Beef", "Customer_ID": "cus_JYjl0oDLvVhdL2", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 11750.0, "Base_ARR": 11750.0, "Forecast_ARR": 11750.0, "Delta_ARR": 0.0, "Renewal_Date": "05/26/2026", "Days_to_Renewal": 21, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "P.B. Bell Companies", "Customer_ID": "cus_RlFzyUhbTZq30j", "CSM": "George Moser", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 5680.0, "Base_ARR": 5680.0, "Forecast_ARR": 5680.0, "Delta_ARR": 0.0, "Renewal_Date": "05/27/2026", "Days_to_Renewal": 22, "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Illinois Army National Guard", "Customer_ID": "cus_IfTeaNc5B6Xz12", "CSM": "George Moser", "Segment": "Business", "Stage": "Non Responsive", "ARR": 8600.0, "Base_ARR": 8600.0, "Forecast_ARR": 8600.0, "Delta_ARR": 0.0, "Renewal_Date": "05/28/2026", "Days_to_Renewal": 23, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 26, "Risk_Level": "High", "Primary_Risk_Driver": "No Recent Activity", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Send urgent alert; escalate to decision-maker today"}, {"Account_Name": "Power Parking / Dash Marketing Group", "Customer_ID": "cus_NeqIfmwTVV7sYh", "CSM": "Nathalli Ibarra", "Segment": "Enterprise", "Stage": "At Risk", "ARR": 20817.0, "Base_ARR": 20817.0, "Forecast_ARR": 20817.0, "Delta_ARR": 0.0, "Renewal_Date": "05/28/2026", "Days_to_Renewal": 23, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 17, "Risk_Level": "High", "Primary_Risk_Driver": "Support Escalations", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Escalate tickets; CSM to personally follow up today"}, {"Account_Name": "Bonita Bay Community Association", "Customer_ID": "cus_SOz8nMbhYxk2X5", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 7000.0, "Base_ARR": 7000.0, "Forecast_ARR": 7000.0, "Delta_ARR": 0.0, "Renewal_Date": "05/29/2026", "Days_to_Renewal": 24, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "My Clinic", "Customer_ID": "cus_SAitStP2u5B5pN", "CSM": "George Moser", "Segment": "Business", "Stage": "At Risk", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 5000.0, "Delta_ARR": 0.0, "Renewal_Date": "05/30/2026", "Days_to_Renewal": 25, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 17, "Risk_Level": "High", "Primary_Risk_Driver": "Support Escalations", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Escalate tickets; CSM to personally follow up today"}, {"Account_Name": "Chervon North America", "Customer_ID": "cus_JaGv45zWXsXBf0", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 11550.0, "Base_ARR": 11550.0, "Forecast_ARR": 11550.0, "Delta_ARR": 0.0, "Renewal_Date": "05/30/2026", "Days_to_Renewal": 25, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Aruba Marriott Resort & Stellaris Casino", "Customer_ID": "cus_HKLGyNdVabtmyM", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 5250.0, "Base_ARR": 5250.0, "Forecast_ARR": 5250.0, "Delta_ARR": 0.0, "Renewal_Date": "05/31/2026", "Days_to_Renewal": 26, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Imagination", "Customer_ID": "cus_IKVxq9QBSt7DZk", "CSM": "George Moser", "Segment": "Business", "Stage": "At Risk", "ARR": 7500.0, "Base_ARR": 7500.0, "Forecast_ARR": 4800.0, "Delta_ARR": -2700.0, "Renewal_Date": "06/02/2026", "Days_to_Renewal": 28, "Usage_Trend": "Decreasing", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 12, "Risk_Level": "High", "Primary_Risk_Driver": "Support Escalations", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Low", "Recommended_Action": "Escalate tickets; CSM to personally follow up today"}, {"Account_Name": "World Rugby", "Customer_ID": "cus_LIQdzYIQhgb4iD", "CSM": "George Moser", "Segment": "Business", "Stage": "Non Responsive", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 5000.0, "Delta_ARR": 0.0, "Renewal_Date": "06/03/2026", "Days_to_Renewal": 29, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 26, "Risk_Level": "High", "Primary_Risk_Driver": "No Recent Activity", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Send urgent alert; escalate to decision-maker today"}, {"Account_Name": "Jostens", "Customer_ID": "cus_KGOrLFTXE9IpWl", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 5000.0, "Delta_ARR": 0.0, "Renewal_Date": "06/03/2026", "Days_to_Renewal": 29, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Wealth Enhancement Group", "Customer_ID": "cus_SRYK6Gj9CbrDd8", "CSM": "George Moser", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 5000.0, "Delta_ARR": 0.0, "Renewal_Date": "06/04/2026", "Days_to_Renewal": 30, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Linen Chest", "Customer_ID": "cus_O1pHGdyJDxLptX", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Scoping", "ARR": 10500.0, "Base_ARR": 10500.0, "Forecast_ARR": 10500.0, "Delta_ARR": 0.0, "Renewal_Date": "06/04/2026", "Days_to_Renewal": 30, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 47, "Risk_Level": "High", "Primary_Risk_Driver": "Low Feature Adoption", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Book urgent training; drive adoption before renewal date"}, {"Account_Name": "KTGY", "Customer_ID": "cus_PuI7NkT5hzSugA", "CSM": "George Moser", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 7500.0, "Base_ARR": 7500.0, "Forecast_ARR": 7500.0, "Delta_ARR": 0.0, "Renewal_Date": "06/10/2026", "Days_to_Renewal": 36, "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "QK", "Customer_ID": "cus_SWSoch6BDXH9E0", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Verbal Confirmation", "ARR": 5420.0, "Base_ARR": 5420.0, "Forecast_ARR": 5420.0, "Delta_ARR": 0.0, "Renewal_Date": "06/16/2026", "Days_to_Renewal": 42, "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Designtex", "Customer_ID": "cus_HTOnLF1ivv8bxC", "CSM": "George Moser", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 7500.0, "Base_ARR": 7500.0, "Forecast_ARR": 7500.0, "Delta_ARR": 0.0, "Renewal_Date": "06/17/2026", "Days_to_Renewal": 43, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Ohio Farmers Insurance Company", "Customer_ID": "cus_QJmZxHBqxQ6JAL", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 7612.0, "Base_ARR": 7612.0, "Forecast_ARR": 7612.0, "Delta_ARR": 0.0, "Renewal_Date": "06/17/2026", "Days_to_Renewal": 43, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "ABC Supply Co. Inc.", "Customer_ID": "cus_POrPv3nfP19XXG", "CSM": "Sedondra Ellis", "Segment": "Enterprise", "Stage": "Renewal Outreach", "ARR": 40000.0, "Base_ARR": 40000.0, "Forecast_ARR": 40000.0, "Delta_ARR": 0.0, "Renewal_Date": "06/19/2026", "Days_to_Renewal": 45, "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Rauch", "Customer_ID": "cus_Jl8n9xrjwUQDPw", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Verbal Confirmation", "ARR": 11000.0, "Base_ARR": 11000.0, "Forecast_ARR": 11000.0, "Delta_ARR": 0.0, "Renewal_Date": "06/20/2026", "Days_to_Renewal": 46, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Pittsburgh Paints Company", "Customer_ID": "cus_TS8iAidU62b1SN", "CSM": "George Moser", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 5000.0, "Delta_ARR": 0.0, "Renewal_Date": "06/22/2026", "Days_to_Renewal": 48, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "The TJX Companies, Inc.", "Customer_ID": "cus_Q6ej5xPaDXnd4s", "CSM": "George Moser", "Segment": "Enterprise", "Stage": "Renewal Outreach", "ARR": 25000.0, "Base_ARR": 25000.0, "Forecast_ARR": 25000.0, "Delta_ARR": 0.0, "Renewal_Date": "06/23/2026", "Days_to_Renewal": 49, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Boston Scientific", "Customer_ID": "cus_MMUVyUiZP9AYIr", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 5000.0, "Delta_ARR": 0.0, "Renewal_Date": "06/23/2026", "Days_to_Renewal": 49, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "HelloFresh AU", "Customer_ID": "cus_ICMozsZP63lxmD", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 10740.0, "Base_ARR": 10740.0, "Forecast_ARR": 10740.0, "Delta_ARR": 0.0, "Renewal_Date": "06/23/2026", "Days_to_Renewal": 49, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Frame My TV", "Customer_ID": "cus_OwPuCZ1kYbUCvh", "CSM": "George Moser", "Segment": "Business", "Stage": "Non Responsive", "ARR": 4000.0, "Base_ARR": 4000.0, "Forecast_ARR": 4000.0, "Delta_ARR": 0.0, "Renewal_Date": "06/25/2026", "Days_to_Renewal": 51, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 26, "Risk_Level": "High", "Primary_Risk_Driver": "No Recent Activity", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Send urgent alert; escalate to decision-maker today"}, {"Account_Name": "BrandSafway", "Customer_ID": "cus_SZUduADB7Nk9s4", "CSM": "George Moser", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 5420.0, "Base_ARR": 5420.0, "Forecast_ARR": 5420.0, "Delta_ARR": 0.0, "Renewal_Date": "06/25/2026", "Days_to_Renewal": 51, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Larwel Industries", "Customer_ID": "cus_QFE9DA1dr6eE7J", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 6400.0, "Base_ARR": 6400.0, "Forecast_ARR": 6400.0, "Delta_ARR": 0.0, "Renewal_Date": "06/25/2026", "Days_to_Renewal": 51, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Tulsa Teachers Credit Union", "Customer_ID": "cus_SZWAvXXLHkf1nT", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Scoping", "ARR": 2700.0, "Base_ARR": 2620.0, "Forecast_ARR": 2700.0, "Delta_ARR": 80.0, "Renewal_Date": "06/25/2026", "Days_to_Renewal": 51, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 47, "Risk_Level": "High", "Primary_Risk_Driver": "Low Feature Adoption", "Forecast_Category": "At Risk", "Expansion_Likelihood": "Medium", "Recommended_Action": "Book urgent training; drive adoption before renewal date"}, {"Account_Name": "Avanti West Coast - RDG", "Customer_ID": "cus_O7qOfz67c9QCaE", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Verbal Confirmation", "ARR": 15000.0, "Base_ARR": 15000.0, "Forecast_ARR": 15000.0, "Delta_ARR": 0.0, "Renewal_Date": "06/26/2026", "Days_to_Renewal": 52, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "L'OREAL", "Customer_ID": "cus_SRyK01BvJB5EKw", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Verbal Confirmation", "ARR": 8000.0, "Base_ARR": 8000.0, "Forecast_ARR": 8000.0, "Delta_ARR": 0.0, "Renewal_Date": "06/26/2026", "Days_to_Renewal": 52, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Dulux Group", "Customer_ID": "cus_JW54kGLkkwqA5B", "CSM": "George Moser", "Segment": "Business", "Stage": "Contract Out For Signature", "ARR": 8920.0, "Base_ARR": 8400.0, "Forecast_ARR": 8920.0, "Delta_ARR": 520.0, "Renewal_Date": "06/27/2026", "Days_to_Renewal": 53, "Usage_Trend": "Increasing", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 87, "Risk_Level": "Low", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Committed", "Expansion_Likelihood": "High", "Recommended_Action": "Confirm signature timeline; prepare expansion proposal"}, {"Account_Name": "Polaris", "Customer_ID": "cus_QNUdI9glJyVsaI", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Verbal Confirmation", "ARR": 9000.0, "Base_ARR": 9000.0, "Forecast_ARR": 9000.0, "Delta_ARR": 0.0, "Renewal_Date": "06/27/2026", "Days_to_Renewal": 53, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Invictus Blue", "Customer_ID": "cus_Quafp6Y3GxU58b", "CSM": "George Moser", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 5000.0, "Delta_ARR": 0.0, "Renewal_Date": "06/29/2026", "Days_to_Renewal": 55, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Viega", "Customer_ID": "cus_JWdcoDp795dDvE", "CSM": "George Moser", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 10200.0, "Base_ARR": 10200.0, "Forecast_ARR": 10200.0, "Delta_ARR": 0.0, "Renewal_Date": "06/29/2026", "Days_to_Renewal": 55, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Loyola Marymount University", "Customer_ID": "cus_LyOD31ysfXnRJG", "CSM": "George Moser", "Segment": "Business", "Stage": "Non Responsive", "ARR": 10302.0, "Base_ARR": 9282.0, "Forecast_ARR": 10302.0, "Delta_ARR": 1020.0, "Renewal_Date": "06/29/2026", "Days_to_Renewal": 55, "Usage_Trend": "Increasing", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 29, "Risk_Level": "High", "Primary_Risk_Driver": "No Recent Activity", "Forecast_Category": "At Risk", "Expansion_Likelihood": "High", "Recommended_Action": "Send urgent alert; escalate to decision-maker today"}, {"Account_Name": "RC Willey", "Customer_ID": "cus_QFb2ERz3Wp4IlS", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 2500.0, "Base_ARR": 2500.0, "Forecast_ARR": 2500.0, "Delta_ARR": 0.0, "Renewal_Date": "06/29/2026", "Days_to_Renewal": 55, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Eataly", "Customer_ID": "cus_O5VcSoEFkjrLqW", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 11340.0, "Base_ARR": 11340.0, "Forecast_ARR": 11340.0, "Delta_ARR": 0.0, "Renewal_Date": "06/29/2026", "Days_to_Renewal": 55, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "SVP Worldwide", "Customer_ID": "cus_JaGnZVzwXZoOPB", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Renewal Outreach", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 5000.0, "Delta_ARR": 0.0, "Renewal_Date": "06/30/2026", "Days_to_Renewal": 56, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 56, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Nike", "Customer_ID": "", "CSM": "Anna Caraviello", "Segment": "Business", "Stage": "Verbal Confirmation", "ARR": 0.0, "Base_ARR": 0.0, "Forecast_ARR": 0.0, "Delta_ARR": 0.0, "Renewal_Date": "N/A", "Days_to_Renewal": 9999, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 73, "Risk_Level": "Medium", "Primary_Risk_Driver": "Renewal Timing Risk", "Forecast_Category": "Likely", "Expansion_Likelihood": "Medium", "Recommended_Action": "Confirm renewal terms; expedite proposal and timeline"}, {"Account_Name": "Virgin Media O2", "Customer_ID": "cus_Pqqtw83gUJfhQB", "CSM": "Sedondra Ellis", "Segment": "Enterprise", "Stage": "Closed Won", "ARR": 25000.0, "Base_ARR": 25000.0, "Forecast_ARR": 25000.0, "Delta_ARR": 0.0, "Renewal_Date": "04/01/2026", "Days_to_Renewal": -34, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 100, "Risk_Level": "Closed Won", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Won", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "Federal Express Corporation", "Customer_ID": "cus_MT4btrtVRaNDAf", "CSM": "George Moser", "Segment": "Enterprise", "Stage": "Closed Won", "ARR": 60000.0, "Base_ARR": 60000.0, "Forecast_ARR": 60000.0, "Delta_ARR": 0.0, "Renewal_Date": "04/04/2026", "Days_to_Renewal": -31, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 100, "Risk_Level": "Closed Won", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Won", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "The Sixth Floor Museum", "Customer_ID": "cus_RxdzjLNTFFUheQ", "CSM": "George Moser", "Segment": "Business", "Stage": "Closed Won", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 5000.0, "Delta_ARR": 0.0, "Renewal_Date": "04/06/2026", "Days_to_Renewal": -29, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 100, "Risk_Level": "Closed Won", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Won", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "Sage", "Customer_ID": "cus_S8YhyGM9J5l9x6", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Closed Won", "ARR": 5600.0, "Base_ARR": 5000.0, "Forecast_ARR": 5600.0, "Delta_ARR": 600.0, "Renewal_Date": "04/14/2026", "Days_to_Renewal": -21, "Usage_Trend": "Increasing", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 100, "Risk_Level": "Closed Won", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Won", "Expansion_Likelihood": "High", "Recommended_Action": "\u2014"}, {"Account_Name": "Teaching Strategies", "Customer_ID": "cus_PvnE9z1l5tiIWc", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Closed Won", "ARR": 7000.0, "Base_ARR": 7000.0, "Forecast_ARR": 7000.0, "Delta_ARR": 0.0, "Renewal_Date": "04/14/2026", "Days_to_Renewal": -21, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 100, "Risk_Level": "Closed Won", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Won", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "Happy Flap", "Customer_ID": "cus_Hent1WD2HxQtZf", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Closed Won", "ARR": 4500.0, "Base_ARR": 4500.0, "Forecast_ARR": 4500.0, "Delta_ARR": 0.0, "Renewal_Date": "04/14/2026", "Days_to_Renewal": -21, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 100, "Risk_Level": "Closed Won", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Won", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "Navy Federal Credit Union", "Customer_ID": "cus_LY9LodTH9fl98t", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Closed Won", "ARR": 11250.0, "Base_ARR": 10500.0, "Forecast_ARR": 11250.0, "Delta_ARR": 750.0, "Renewal_Date": "04/20/2026", "Days_to_Renewal": -15, "Usage_Trend": "Increasing", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 100, "Risk_Level": "Closed Won", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Won", "Expansion_Likelihood": "High", "Recommended_Action": "\u2014"}, {"Account_Name": "Convatec Limited", "Customer_ID": "cus_MzHhG5cjrmD0kA", "CSM": "Sedondra Ellis", "Segment": "Enterprise", "Stage": "Closed Won", "ARR": 27313.0, "Base_ARR": 27313.0, "Forecast_ARR": 27313.0, "Delta_ARR": 0.0, "Renewal_Date": "04/24/2026", "Days_to_Renewal": -11, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 100, "Risk_Level": "Closed Won", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Won", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "Convatec Limited", "Customer_ID": "cus_MzHhG5cjrmD0kA", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Closed Won", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 5000.0, "Delta_ARR": 0.0, "Renewal_Date": "04/29/2026", "Days_to_Renewal": -6, "Usage_Trend": "Flat", "Key_Feature_Adoption": "Digital Business Cards", "Renewal_Probability": 100, "Risk_Level": "Closed Won", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Won", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "Mecklenburg County", "Customer_ID": "cus_Nm1rRBTp2PUKLa", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Closed Won", "ARR": 9139.0, "Base_ARR": 9139.0, "Forecast_ARR": 9139.0, "Delta_ARR": 0.0, "Renewal_Date": "04/30/2026", "Days_to_Renewal": -5, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 100, "Risk_Level": "Closed Won", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Won", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "PureCare", "Customer_ID": "cus_Ix6YQMb9Usb09W", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Closed Won", "ARR": 9000.0, "Base_ARR": 9000.0, "Forecast_ARR": 9000.0, "Delta_ARR": 0.0, "Renewal_Date": "05/09/2026", "Days_to_Renewal": 4, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 100, "Risk_Level": "Closed Won", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Won", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "Fidelity Investments Canada", "Customer_ID": "cus_JVOmirqjdLcpwu", "CSM": "George Moser", "Segment": "Business", "Stage": "Closed Won", "ARR": 11100.0, "Base_ARR": 11100.0, "Forecast_ARR": 11100.0, "Delta_ARR": 0.0, "Renewal_Date": "05/17/2026", "Days_to_Renewal": 12, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 100, "Risk_Level": "Closed Won", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Won", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "TePe", "Customer_ID": "cus_NruUZiifto6qNh", "CSM": "Nathalli Ibarra", "Segment": "Business", "Stage": "Closed Won", "ARR": 3848.0, "Base_ARR": 3848.0, "Forecast_ARR": 3847.8, "Delta_ARR": -0.2, "Renewal_Date": "05/20/2026", "Days_to_Renewal": 15, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 100, "Risk_Level": "Closed Won", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Won", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "Tumi", "Customer_ID": "cus_O1og6fGidPecpd", "CSM": "George Moser", "Segment": "Enterprise", "Stage": "Closed Won", "ARR": 25000.0, "Base_ARR": 25000.0, "Forecast_ARR": 23100.0, "Delta_ARR": -1900.0, "Renewal_Date": "06/04/2026", "Days_to_Renewal": 30, "Usage_Trend": "Decreasing", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 100, "Risk_Level": "Closed Won", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Won", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "Embraer Executive Aircraft, Inc.", "Customer_ID": "cus_ShiiebWnLxALgn", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Closed Won", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 5000.0, "Delta_ARR": 0.0, "Renewal_Date": "07/20/2026", "Days_to_Renewal": 76, "Usage_Trend": "Flat", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 100, "Risk_Level": "Closed Won", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Won", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "Fasten", "Customer_ID": "cus_S3ysUiDjmJFFnZ", "CSM": "George Moser", "Segment": "Business", "Stage": "Closed Lost", "ARR": 4500.0, "Base_ARR": 4500.0, "Forecast_ARR": 0.0, "Delta_ARR": -4500.0, "Renewal_Date": "04/09/2026", "Days_to_Renewal": -26, "Usage_Trend": "Decreasing", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 0, "Risk_Level": "Closed Lost", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Lost", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "Seychelles Civil Aviation Authority", "Customer_ID": "cus_S35SCtbla1xph7", "CSM": "George Moser", "Segment": "Business", "Stage": "Closed Lost", "ARR": 2500.0, "Base_ARR": 2500.0, "Forecast_ARR": 0.0, "Delta_ARR": -2500.0, "Renewal_Date": "04/09/2026", "Days_to_Renewal": -26, "Usage_Trend": "Decreasing", "Key_Feature_Adoption": "Digital Business Cards", "Renewal_Probability": 0, "Risk_Level": "Closed Lost", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Lost", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "Seychelles Airport Authority", "Customer_ID": "cus_S6gGkEBFU2NIFx", "CSM": "George Moser", "Segment": "Business", "Stage": "Closed Lost", "ARR": 2500.0, "Base_ARR": 2500.0, "Forecast_ARR": 0.0, "Delta_ARR": -2500.0, "Renewal_Date": "04/09/2026", "Days_to_Renewal": -26, "Usage_Trend": "Decreasing", "Key_Feature_Adoption": "Digital Business Cards", "Renewal_Probability": 0, "Risk_Level": "Closed Lost", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Lost", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "Kaiser Foundation Health Plan, Inc.", "Customer_ID": "cus_S8vdBlWiOS1rcP", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Closed Lost", "ARR": 5000.0, "Base_ARR": 5000.0, "Forecast_ARR": 0.0, "Delta_ARR": -5000.0, "Renewal_Date": "04/15/2026", "Days_to_Renewal": -20, "Usage_Trend": "Decreasing", "Key_Feature_Adoption": "Digital Business Cards", "Renewal_Probability": 0, "Risk_Level": "Closed Lost", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Lost", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "Yello Media Group", "Customer_ID": "cus_LkYS1soaQ35VZo", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Closed Lost", "ARR": 10000.0, "Base_ARR": 10000.0, "Forecast_ARR": 0.0, "Delta_ARR": -10000.0, "Renewal_Date": "05/23/2026", "Days_to_Renewal": 18, "Usage_Trend": "Decreasing", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 0, "Risk_Level": "Closed Lost", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Lost", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "Freshive", "Customer_ID": "cus_PlZQxh6nApeyAR", "CSM": "George Moser", "Segment": "Business", "Stage": "Closed Lost", "ARR": 7560.0, "Base_ARR": 7560.0, "Forecast_ARR": 0.0, "Delta_ARR": -7560.0, "Renewal_Date": "05/27/2026", "Days_to_Renewal": 22, "Usage_Trend": "Decreasing", "Key_Feature_Adoption": "Digital Business Cards", "Renewal_Probability": 0, "Risk_Level": "Closed Lost", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Lost", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "One Medical", "Customer_ID": "cus_O741atTCZAK9z6", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Closed Lost", "ARR": 10000.0, "Base_ARR": 10000.0, "Forecast_ARR": 0.0, "Delta_ARR": -10000.0, "Renewal_Date": "06/18/2026", "Days_to_Renewal": 44, "Usage_Trend": "Decreasing", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 0, "Risk_Level": "Closed Lost", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Lost", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}, {"Account_Name": "haleon.com", "Customer_ID": "cus_OBBmvBn8ktycQ6", "CSM": "Sedondra Ellis", "Segment": "Business", "Stage": "Closed Lost", "ARR": 7500.0, "Base_ARR": 7500.0, "Forecast_ARR": 0.0, "Delta_ARR": -7500.0, "Renewal_Date": "06/28/2026", "Days_to_Renewal": 54, "Usage_Trend": "Decreasing", "Key_Feature_Adoption": "QR Codes", "Renewal_Probability": 0, "Risk_Level": "Closed Lost", "Primary_Risk_Driver": "\u2014", "Forecast_Category": "Closed Lost", "Expansion_Likelihood": "\u2014", "Recommended_Action": "\u2014"}];
+const SUMMARY  = {"Top_3_Risk_Patterns": ["Renewal Timing Risk", "Support Escalations", "No Recent Activity"], "_raw": {"total_book_base": 917136.0, "pipe_arr": 656996.0, "open_arr": 605179.0, "at_risk_arr": 51817.0, "cw_arr": 213750.0, "cl_arr": 49560.0, "pipe_base": 655176.0, "forecast_total": 654296.0, "forecast_delta": -880.0, "forecast_exp": 1820.0, "cw_delta": -550.2, "cw_expansion": 1350.0, "forecast_nrr": 71.3, "actual_nrr": 23.3, "win_rate": 81.2, "n_pipeline": 70, "n_open": 64, "n_at_risk": 6, "n_cw": 15, "n_cl": 8}};
 
-// ── state ─────────────────────────────────────────────────────────────────────
-let sortCol = 'Risk_Level', sortDir = 1;
+let _sortCol = 'Days_to_Renewal', _sortDir = 1;
 let filteredData = [];
 
-// ── init ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   populateFilters();
-  renderKPIs(RAW_DATA, SUMMARY);
+  renderKPIs(RAW_DATA, SUMMARY._raw);
   renderCharts(RAW_DATA);
-  renderRiskPatterns(SUMMARY);
+  renderRiskPatterns(RAW_DATA);
   applyFilters();
 });
 
-// ── KPI ───────────────────────────────────────────────────────────────────────
-function fmt(n){ return '$' + Math.round(n).toLocaleString(); }
-function pct(n,total){ return total ? (n/total*100).toFixed(1)+'%' : '—'; }
-
-function renderKPIs(data, sum){
-  const pipe = data.filter(d => d.Stage !== 'Closed Won');
-  const r = sum._raw;
-  document.getElementById('kpi-total').textContent       = fmt(r.total);
-  document.getElementById('kpi-accounts-count').textContent = pipe.length + ' pipeline accounts';
-  document.getElementById('kpi-committed').textContent   = fmt(r.committed);
-  document.getElementById('kpi-committed-pct').textContent= pct(r.committed,r.total)+' of pipeline';
-  document.getElementById('kpi-likely').textContent      = fmt(r.likely);
-  document.getElementById('kpi-likely-pct').textContent  = pct(r.likely,r.total)+' of pipeline';
-  document.getElementById('kpi-atrisk').textContent      = fmt(r.at_risk);
-  document.getElementById('kpi-atrisk-pct').textContent  = pct(r.at_risk,r.total)+' of pipeline';
-  const highExp = pipe.filter(d=>d.Expansion_Likelihood==='High');
-  const expVal  = highExp.reduce((s,d)=>s+d.Expansion_Opportunities_Value,0);
-  document.getElementById('kpi-expansion').textContent   = fmt(expVal);
-  document.getElementById('kpi-expansion-sub').textContent= highExp.length+' high-opportunity accounts';
+// ── formatting ────────────────────────────────────────────────────────────────
+function fmt(n){
+  const abs = Math.abs(Math.round(n));
+  const s = '$' + abs.toLocaleString();
+  return n < 0 ? '−' + s : s;
 }
+function fmtDelta(n){
+  if(n === 0) return '<span class="delta-cell-zero">$0</span>';
+  const s = '$' + Math.abs(Math.round(n)).toLocaleString();
+  return n > 0
+    ? `<span class="delta-cell-pos">+${s}</span>`
+    : `<span class="delta-cell-neg">−${s}</span>`;
+}
+function pct(n,d){ return d ? (n/d*100).toFixed(1)+'%' : '—'; }
+
+// ── KPI render ────────────────────────────────────────────────────────────────
+function renderKPIs(data, r){
+  // Book
+  const totalBook = data.reduce((s,d)=>s+d.Base_ARR, 0);
+  const nAccts    = data.length;
+  const openAccts = data.filter(d=>d.Stage!=='Closed Won'&&d.Stage!=='Closed Lost'&&d.Stage!=='At Risk');
+  const atRiskA   = data.filter(d=>d.Stage==='At Risk');
+  const cwAccts   = data.filter(d=>d.Stage==='Closed Won');
+  const clAccts   = data.filter(d=>d.Stage==='Closed Lost');
+  const openArr   = openAccts.reduce((s,d)=>s+d.ARR,0);
+  const atRiskArr = atRiskA.reduce((s,d)=>s+d.ARR,0);
+  const cwArr     = cwAccts.reduce((s,d)=>s+d.ARR,0);
+  const clArr     = clAccts.reduce((s,d)=>s+d.ARR,0);
+  const wr        = (cwArr+clArr)>0 ? (cwArr/(cwArr+clArr)*100).toFixed(1)+'%' : '—';
+
+  setText('k-book',   fmt(totalBook));
+  setText('k-book-n', nAccts+' total accounts');
+  setText('k-open',   fmt(openArr));
+  setText('k-open-n', openAccts.length+' accounts');
+  setText('k-atrisk', fmt(atRiskArr));
+  setText('k-atrisk-n', atRiskA.length+' accounts');
+  setText('k-cw',     fmt(cwArr));
+  setText('k-cw-n',   cwAccts.length+' accounts');
+  setText('k-cl',     fmt(clArr));
+  setText('k-cl-n',   clAccts.length+' accounts');
+  setText('k-wr',     wr);
+
+  // Forecasted
+  const pipeAccts   = data.filter(d=>d.Stage!=='Closed Won'&&d.Stage!=='Closed Lost');
+  const pipeBase    = pipeAccts.reduce((s,d)=>s+d.Base_ARR,0);
+  const forecastArr = pipeAccts.reduce((s,d)=>s+(d.Forecast_ARR||d.Base_ARR),0);
+  const fDelta      = forecastArr - pipeBase;
+  const fExp        = pipeAccts.reduce((s,d)=>s+(d.Delta_ARR>0?d.Delta_ARR:0),0);
+  const fNRR        = totalBook>0 ? (forecastArr/totalBook*100).toFixed(1)+'%' : '—';
+  const atRiskArr2  = pipeAccts.filter(d=>d.Stage==='At Risk').reduce((s,d)=>s+d.ARR,0);
+
+  setText('k-pbase',   fmt(pipeBase));
+  setText('k-farr',    fmt(forecastArr));
+  setText('k-fnrr',    'NRR '+fNRR);
+  setText('k-fnrr2',   fNRR);
+  setText('k-fexp',    fmt(fExp));
+  setText('k-atrisk2', fmt(atRiskArr2));
+  const fDeltaEl = document.getElementById('k-fdelta');
+  fDeltaEl.textContent = (fDelta>=0?'+':'')+fmt(fDelta).replace('−','-');
+  fDeltaEl.className = 'kpi-value '+(fDelta>=0?'delta-pos':'delta-neg');
+
+  // Actuals
+  const cwDelta = cwAccts.reduce((s,d)=>s+d.Delta_ARR,0);
+  const cwExp   = cwAccts.reduce((s,d)=>s+(d.Delta_ARR>0?d.Delta_ARR:0),0);
+  const aNRR    = totalBook>0 ? (cwArr/totalBook*100).toFixed(1)+'%' : '—';
+
+  setText('k-cw2',   fmt(cwArr));
+  setText('k-anrr',  'NRR '+aNRR);
+  setText('k-anrr2', aNRR);
+  setText('k-aexp',  fmt(cwExp));
+  setText('k-cl2',   fmt(clArr));
+  setText('k-wr2',   wr);
+  const aDeltaEl = document.getElementById('k-adelta');
+  aDeltaEl.textContent = (cwDelta>=0?'+':'')+fmt(cwDelta).replace('−','-');
+  aDeltaEl.className = 'kpi-value '+(cwDelta>=0?'delta-pos':'delta-neg');
+}
+
+function setText(id, val){ const el=document.getElementById(id); if(el) el.textContent=val; }
 
 // ── charts ────────────────────────────────────────────────────────────────────
 function renderCharts(data){
-  const pipe = data.filter(d=>d.Stage!=='Closed Won');
+  const pipe     = data.filter(d=>d.Stage!=='Closed Won'&&d.Stage!=='Closed Lost');
+  const openPipe = pipe.filter(d=>d.Stage!=='At Risk');
+  const atRisk   = pipe.filter(d=>d.Stage==='At Risk');
+  const cw       = data.filter(d=>d.Stage==='Closed Won');
+  const cl       = data.filter(d=>d.Stage==='Closed Lost');
 
-  // Forecast donut
-  const fcCounts = {Committed:0, Likely:0, 'At Risk':0};
-  pipe.forEach(d=>{ if(fcCounts[d.Forecast_Category]!==undefined) fcCounts[d.Forecast_Category]+=d.ARR; });
-  new Chart(document.getElementById('chartForecast').getContext('2d'),{
+  const sum = arr => arr.reduce((s,d)=>s+d.ARR,0);
+  new Chart(document.getElementById('chartBook').getContext('2d'),{
     type:'doughnut',
     data:{
-      labels:Object.keys(fcCounts),
-      datasets:[{data:Object.values(fcCounts),
-        backgroundColor:['#22c55e','#f59e0b','#ef4444'],
-        borderColor:'#1a1d27',borderWidth:3}]
+      labels:['Open Pipeline','At Risk','Closed Won','Closed Lost'],
+      datasets:[{
+        data:[sum(openPipe),sum(atRisk),sum(cw),sum(cl)],
+        backgroundColor:['#3b82f6','#f59e0b','#22c55e','#ef4444'],
+        borderColor:'#ffffff',borderWidth:3
+      }]
     },
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:11}}},
+      plugins:{legend:{position:'bottom',labels:{color:'#64748b',font:{size:10}}},
                tooltip:{callbacks:{label:c=>' '+fmt(c.raw)}}}}
   });
 
-  // Risk donut
-  const rkCounts = {High:0,Medium:0,Low:0};
-  pipe.forEach(d=>{ rkCounts[d.Risk_Level]=(rkCounts[d.Risk_Level]||0)+1; });
+  const rkMap = {High:0,Medium:0,Low:0};
+  pipe.forEach(d=>{ if(rkMap[d.Risk_Level]!==undefined) rkMap[d.Risk_Level]++; });
   new Chart(document.getElementById('chartRisk').getContext('2d'),{
     type:'doughnut',
     data:{
-      labels:Object.keys(rkCounts),
-      datasets:[{data:Object.values(rkCounts),
+      labels:['High','Medium','Low'],
+      datasets:[{data:Object.values(rkMap),
         backgroundColor:['#ef4444','#f59e0b','#22c55e'],
-        borderColor:'#1a1d27',borderWidth:3}]
+        borderColor:'#ffffff',borderWidth:3}]
     },
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',font:{size:11}}}}}
+      plugins:{legend:{position:'bottom',labels:{color:'#64748b',font:{size:10}}}}}
   });
 
-  // Renewal timeline bar
   const monthMap = {};
   pipe.forEach(d=>{
     if(d.Renewal_Date==='N/A') return;
-    const [m,,y] = d.Renewal_Date.split('/');
-    const key = y+'-'+m.padStart(2,'0');
-    monthMap[key] = (monthMap[key]||0) + d.ARR;
+    const p=d.Renewal_Date.split('/');
+    if(p.length<3) return;
+    const key=p[2]+'-'+p[0].padStart(2,'0');
+    monthMap[key]=(monthMap[key]||0)+d.ARR;
   });
-  const months = Object.keys(monthMap).sort();
-  const labels = months.map(k=>{ const [y,m]=k.split('-'); return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+' '+y.slice(2); });
-  const vals   = months.map(k=>monthMap[k]);
+  const months=Object.keys(monthMap).sort();
+  const MNAMES=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const labels=months.map(k=>{const[y,m]=k.split('-');return MNAMES[+m-1]+' '+y.slice(2);});
   new Chart(document.getElementById('chartTimeline').getContext('2d'),{
     type:'bar',
-    data:{
-      labels,
-      datasets:[{label:'ARR Renewing',data:vals,
-        backgroundColor:'rgba(99,102,241,0.7)',borderColor:'#6366f1',borderWidth:1,borderRadius:4}]
-    },
+    data:{labels,datasets:[{label:'ARR Renewing',data:months.map(k=>monthMap[k]),
+      backgroundColor:'rgba(99,102,241,.15)',borderColor:'#4f46e5',borderWidth:1.5,borderRadius:4}]},
     options:{responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{display:false},
-               tooltip:{callbacks:{label:c=>' '+fmt(c.raw)}}},
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>' '+fmt(c.raw)}}},
       scales:{
-        x:{ticks:{color:'#94a3b8',font:{size:10}},grid:{color:'#1e2130'}},
-        y:{ticks:{color:'#94a3b8',font:{size:10},callback:v=>fmt(v)},grid:{color:'#1e2130'}}
+        x:{ticks:{color:'#64748b',font:{size:9}},grid:{color:'#f1f5f9'}},
+        y:{ticks:{color:'#64748b',font:{size:9},callback:v=>fmt(v)},grid:{color:'#f1f5f9'}}
       }}
   });
 }
 
 // ── risk patterns ─────────────────────────────────────────────────────────────
-function renderRiskPatterns(sum){
-  const pipe = RAW_DATA.filter(d=>d.Stage!=='Closed Won' && d.Risk_Level!=='Low');
+function renderRiskPatterns(data){
+  const pipe   = data.filter(d=>d.Stage!=='Closed Won'&&d.Stage!=='Closed Lost'&&d.Risk_Level!=='Low');
   const counts = {};
   pipe.forEach(d=>{ counts[d.Primary_Risk_Driver]=(counts[d.Primary_Risk_Driver]||0)+1; });
   const sorted = Object.entries(counts).sort((a,b)=>b[1]-a[1]).slice(0,4);
-
-  const el = document.getElementById('pattern-list');
-  el.innerHTML = sorted.map(([name,cnt],i)=>`
+  document.getElementById('pattern-list').innerHTML = sorted.map(([name,cnt],i)=>`
     <div class="pattern-item">
       <div class="pattern-rank">#${i+1} Risk Pattern</div>
       <div class="pattern-name">${name}</div>
@@ -426,136 +588,182 @@ function renderRiskPatterns(sum){
 
 // ── filters ───────────────────────────────────────────────────────────────────
 function populateFilters(){
-  const csms = [...new Set(RAW_DATA.map(d=>d.CSM))].filter(Boolean).sort();
-  const csmSel = document.getElementById('filter-csm');
-  csms.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; csmSel.appendChild(o); });
+  const csms=[...new Set(RAW_DATA.map(d=>d.CSM))].filter(Boolean).sort();
+  const sel=document.getElementById('filter-csm');
+  csms.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);});
 
-  const months = [...new Set(RAW_DATA.filter(d=>d.Renewal_Date!=='N/A').map(d=>{
-    const [m,,y]=d.Renewal_Date.split('/');
-    return {key:y+'-'+m.padStart(2,'0'), label:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]+' '+y};
-  }))];
-  const uniq = [...new Map(months.map(x=>[x.key,x])).values()].sort((a,b)=>a.key.localeCompare(b.key));
-  const mSel = document.getElementById('filter-month');
-  uniq.forEach(({key,label})=>{ const o=document.createElement('option'); o.value=key; o.textContent=label; mSel.appendChild(o); });
-
-  ['filter-csm','filter-forecast','filter-risk','filter-segment','filter-month','filter-expansion'].forEach(id=>{
-    document.getElementById(id).addEventListener('change', applyFilters);
+  const qSel=document.getElementById('filter-quarter');
+  const qSet=new Map();
+  RAW_DATA.forEach(d=>{
+    if(d.Renewal_Date==='N/A') return;
+    const p=d.Renewal_Date.split('/');
+    if(p.length<3) return;
+    const m=parseInt(p[0]), yr=p[2], q=Math.ceil(m/3);
+    const key=yr+'-Q'+q;
+    if(!qSet.has(key)) qSet.set(key,'Q'+q+' '+yr);
   });
+  [...qSet.entries()].sort((a,b)=>a[0].localeCompare(b[0])).forEach(([k,v])=>{
+    const o=document.createElement('option');o.value=k;o.textContent=v;qSel.appendChild(o);
+  });
+
+  ['filter-csm','filter-stage','filter-risk','filter-forecast','filter-segment','filter-quarter','filter-expansion']
+    .forEach(id=>document.getElementById(id)?.addEventListener('change',applyFilters));
   document.getElementById('search-input').addEventListener('input', applyFilters);
 }
 
 function applyFilters(){
-  const search   = document.getElementById('search-input').value.toLowerCase();
-  const csm      = document.getElementById('filter-csm').value;
-  const forecast = document.getElementById('filter-forecast').value;
-  const risk     = document.getElementById('filter-risk').value;
-  const segment  = document.getElementById('filter-segment').value;
-  const month    = document.getElementById('filter-month').value;
-  const expansion= document.getElementById('filter-expansion').value;
+  const search  = document.getElementById('search-input').value.toLowerCase();
+  const csm     = document.getElementById('filter-csm').value;
+  const stage   = document.getElementById('filter-stage').value;
+  const risk    = document.getElementById('filter-risk').value;
+  const forecast= document.getElementById('filter-forecast').value;
+  const segment = document.getElementById('filter-segment').value;
+  const quarter = document.getElementById('filter-quarter').value;
+  const exp     = document.getElementById('filter-expansion').value;
 
   filteredData = RAW_DATA.filter(d=>{
-    if(search    && !d.Account_Name.toLowerCase().includes(search)) return false;
-    if(csm       && d.CSM!==csm) return false;
-    if(forecast  && d.Forecast_Category!==forecast) return false;
-    if(risk      && d.Risk_Level!==risk) return false;
-    if(segment   && d.Segment!==segment) return false;
-    if(expansion && d.Expansion_Likelihood!==expansion) return false;
-    if(month && d.Renewal_Date!=='N/A'){
-      const [m,,y]=d.Renewal_Date.split('/');
-      if((y+'-'+m.padStart(2,'0'))!==month) return false;
+    if(search  && !d.Account_Name.toLowerCase().includes(search)) return false;
+    if(csm     && d.CSM!==csm)               return false;
+    if(stage   && d.Stage!==stage)            return false;
+    if(risk    && d.Risk_Level!==risk)        return false;
+    if(forecast&& d.Forecast_Category!==forecast) return false;
+    if(segment && d.Segment!==segment)        return false;
+    if(exp     && d.Expansion_Likelihood!==exp) return false;
+    if(quarter && d.Renewal_Date!=='N/A'){
+      const p=d.Renewal_Date.split('/');
+      if(p.length>=3){
+        const q=Math.ceil(parseInt(p[0])/3);
+        if((p[2]+'-Q'+q)!==quarter) return false;
+      }
     }
     return true;
   });
 
   renderTable(filteredData);
-  updateLiveKPIs(filteredData);
+  renderKPIs(filteredData, SUMMARY._raw);
 }
 
 function resetFilters(){
-  ['filter-csm','filter-forecast','filter-risk','filter-segment','filter-month','filter-expansion'].forEach(id=>{
-    document.getElementById(id).value='';
-  });
+  ['filter-csm','filter-stage','filter-risk','filter-forecast','filter-segment','filter-quarter','filter-expansion']
+    .forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
   document.getElementById('search-input').value='';
   applyFilters();
 }
 
-function updateLiveKPIs(data){
-  const pipe = data.filter(d=>d.Stage!=='Closed Won');
-  const total     = pipe.reduce((s,d)=>s+d.ARR,0);
-  const committed = pipe.filter(d=>d.Forecast_Category==='Committed').reduce((s,d)=>s+d.ARR,0);
-  const likely    = pipe.filter(d=>d.Forecast_Category==='Likely').reduce((s,d)=>s+d.ARR,0);
-  const atRisk    = pipe.filter(d=>d.Forecast_Category==='At Risk').reduce((s,d)=>s+d.ARR,0);
-  document.getElementById('kpi-total').textContent       = fmt(total);
-  document.getElementById('kpi-accounts-count').textContent = pipe.length+' pipeline accounts';
-  document.getElementById('kpi-committed').textContent   = fmt(committed);
-  document.getElementById('kpi-committed-pct').textContent= pct(committed,total)+' of pipeline';
-  document.getElementById('kpi-likely').textContent      = fmt(likely);
-  document.getElementById('kpi-likely-pct').textContent  = pct(likely,total)+' of pipeline';
-  document.getElementById('kpi-atrisk').textContent      = fmt(atRisk);
-  document.getElementById('kpi-atrisk-pct').textContent  = pct(atRisk,total)+' of pipeline';
-}
-
 // ── table ─────────────────────────────────────────────────────────────────────
-let _sortCol='Risk_Level', _sortDir=1;
+const riskRank = {High:0,Medium:1,Low:2,'Closed Won':3,'Closed Lost':4};
+const fcRank   = {'At Risk':0,Likely:1,Committed:2,'Closed Won':3,'Closed Lost':4};
 
 function sortTable(col){
-  if(_sortCol===col) _sortDir*=-1; else { _sortCol=col; _sortDir=1; }
+  if(_sortCol===col) _sortDir*=-1; else{_sortCol=col;_sortDir=1;}
   document.querySelectorAll('thead th').forEach(th=>{
     th.classList.remove('sort-asc','sort-desc');
-    if(th.getAttribute('onclick')==="sortTable('"+col+"')"){
+    if(th.getAttribute('onclick')==="sortTable('"+col+"')")
       th.classList.add(_sortDir===1?'sort-asc':'sort-desc');
-    }
   });
-  renderTable(filteredData.length ? filteredData : RAW_DATA);
+  renderTable(filteredData.length?filteredData:RAW_DATA);
 }
 
-const riskRank  = {High:0,Medium:1,Low:2};
-const fcRank    = {'At Risk':0,Likely:1,Committed:2};
+const STAGE_COLORS = {
+  'Closed Won'               :['#15803d','#14532d'],
+  'Closed Lost'              :['#b91c1c','#7f1d1d'],
+  'Contract Out For Signature':['#2563eb','#1e3a8a'],
+  'Pending Finance'          :['#2563eb','#1e3a8a'],
+  'Verbal Confirmation'      :['#7c3aed','#4c1d95'],
+  'Renewal Outreach'         :['#0891b2','#164e63'],
+  'Scoping'                  :['#d97706','#78350f'],
+  'Non Responsive'           :['#d97706','#78350f'],
+  'At Risk'                  :['#dc2626','#7f1d1d'],
+};
+
+function stagePill(s){
+  const c=STAGE_COLORS[s]||['#374151','#9ca3af'];
+  return `<span class="stage-pill" style="background:${c[0]}22;color:${c[1]};border:1px solid ${c[0]}">${s}</span>`;
+}
 
 function renderTable(data){
-  const sorted = [...data].sort((a,b)=>{
-    let av=a[_sortCol], bv=b[_sortCol];
-    if(_sortCol==='Risk_Level')        { av=riskRank[av]||0; bv=riskRank[bv]||0; }
-    if(_sortCol==='Forecast_Category') { av=fcRank[av]||0;   bv=fcRank[bv]||0;   }
+  const sorted=[...data].sort((a,b)=>{
+    let av=a[_sortCol],bv=b[_sortCol];
+    if(_sortCol==='Risk_Level')        {av=riskRank[av]??9;bv=riskRank[bv]??9;}
+    if(_sortCol==='Forecast_Category') {av=fcRank[av]??9;  bv=fcRank[bv]??9;}
     if(typeof av==='number') return (av-bv)*_sortDir;
     return String(av).localeCompare(String(bv))*_sortDir;
   });
 
-  document.getElementById('row-count').textContent = sorted.length+' accounts shown';
+  document.getElementById('row-count').textContent=sorted.length+' accounts shown';
 
-  const probColor = p => p>=80?'#22c55e' : p>=50?'#f59e0b' : '#ef4444';
-  const usageIcon = t => t==='Increasing'?'▲ Increasing':t==='Decreasing'?'▼ Decreasing':'→ Flat';
-  const usageColor= t => t==='Increasing'?'#22c55e':t==='Decreasing'?'#ef4444':'#94a3b8';
+  const probColor=p=>p>=80?'#22c55e':p>=50?'#f59e0b':'#ef4444';
+  const usageColor=t=>t==='Increasing'?'#16a34a':t==='Decreasing'?'#dc2626':'#64748b';
+  const usageIcon=t=>t==='Increasing'?'▲':t==='Decreasing'?'▼':'→';
 
-  const html = sorted.map(d => {
-    const daysCell = d.Days_to_Renewal===999 ? '<span style="color:#94a3b8">—</span>'
-      : d.Days_to_Renewal < 0  ? `<span class="days-urgent">${d.Days_to_Renewal}d overdue</span>`
-      : d.Days_to_Renewal < 30 ? `<span class="days-urgent">${d.Days_to_Renewal}d</span>`
-      : d.Days_to_Renewal < 60 ? `<span class="days-soon">${d.Days_to_Renewal}d</span>`
-      : `<span style="color:#94a3b8">${d.Days_to_Renewal}d</span>`;
+  const html=sorted.map(d=>{
+    const isCW = d.Stage==='Closed Won';
+    const isCL = d.Stage==='Closed Lost';
+    const rowClass = isCW?'row-cw':isCL?'row-cl':'';
 
-    const probFill = `<div class="prob-bar"><div class="prob-fill" style="width:${d.Renewal_Probability}%;background:${probColor(d.Renewal_Probability)}"></div></div>`;
+    const daysCell = d.Days_to_Renewal===9999 ? '<span style="color:#64748b">—</span>'
+      : isCW||isCL ? `<span style="color:#64748b">${d.Days_to_Renewal}d</span>`
+      : d.Days_to_Renewal<0  ? `<span class="days-urgent">${Math.abs(d.Days_to_Renewal)}d overdue</span>`
+      : d.Days_to_Renewal<30 ? `<span class="days-urgent">${d.Days_to_Renewal}d</span>`
+      : d.Days_to_Renewal<60 ? `<span class="days-soon">${d.Days_to_Renewal}d</span>`
+      : `<span style="color:#64748b">${d.Days_to_Renewal}d</span>`;
 
-    const expClass = d.Expansion_Likelihood==='High'?'exp-high':d.Expansion_Likelihood==='Low'?'exp-low':'exp-med';
+    const probBar = (isCW||isCL)
+      ? `<span style="font-size:11px;color:${isCW?'#22c55e':'#ef4444'}">${isCW?'✓ Closed':'✗ Lost'}</span>`
+      : `<div class="prob-bar"><div class="prob-fill" style="width:${d.Renewal_Probability}%;background:${probColor(d.Renewal_Probability)}"></div></div>`
+        +`<span class="prob-val" style="color:${probColor(d.Renewal_Probability)}">${d.Renewal_Probability}%</span>`;
 
-    return `<tr>
+    const riskBadge = isCW
+      ? `<span class="badge badge-closedwon">Won</span>`
+      : isCL
+      ? `<span class="badge badge-closedlost">Lost</span>`
+      : `<span class="badge badge-${d.Risk_Level.toLowerCase()}">${d.Risk_Level}</span>`;
+
+    const fcBadge = isCW
+      ? `<span class="badge badge-closedwon">Closed Won</span>`
+      : isCL
+      ? `<span class="badge badge-closedlost">Closed Lost</span>`
+      : `<span class="badge badge-${d.Forecast_Category.replace(/\s/g,'').toLowerCase().replace('atrisk','atrisk2')}">${d.Forecast_Category}</span>`;
+
+    const expClass = d.Expansion_Likelihood==='High'?'#22c55e':d.Expansion_Likelihood==='Low'?'#ef4444':'#94a3b8';
+
+    return `<tr class="${rowClass}">
       <td class="account-name" title="${d.Customer_ID}">${d.Account_Name}</td>
       <td>${d.CSM.split(' ')[0]}</td>
-      <td><span class="badge ${d.Segment==='Enterprise'?'badge-enterprise':'badge-business'}">${d.Segment}</span></td>
-      <td class="arr-val">$${d.ARR.toLocaleString()}</td>
-      <td>${d.Renewal_Date}</td>
+      <td>${stagePill(d.Stage)}</td>
+      <td class="arr-val">${fmt(d.ARR)}</td>
+      <td style="color:#64748b">${fmt(d.Base_ARR)}</td>
+      <td style="color:#6366f1">${fmt(d.Forecast_ARR)}</td>
+      <td>${fmtDelta(d.Delta_ARR)}</td>
+      <td style="color:#64748b;font-size:12px">${d.Renewal_Date}</td>
       <td>${daysCell}</td>
-      <td>${probFill}<span class="prob-val" style="color:${probColor(d.Renewal_Probability)}">${d.Renewal_Probability}%</span></td>
-      <td><span class="badge badge-${d.Risk_Level.toLowerCase()}">${d.Risk_Level}</span></td>
-      <td style="font-size:12px;color:#94a3b8">${d.Primary_Risk_Driver}</td>
-      <td><span class="badge badge-${d.Forecast_Category.replace(' ','').toLowerCase()}">${d.Forecast_Category}</span></td>
-      <td style="font-size:12px;color:${usageColor(d.Usage_Trend)}">${usageIcon(d.Usage_Trend)}</td>
-      <td class="${expClass}" style="font-size:12px">${d.Expansion_Likelihood}</td>
+      <td>${probBar}</td>
+      <td>${riskBadge}</td>
+      <td style="font-size:11px;color:#64748b">${d.Primary_Risk_Driver}</td>
+      <td>${fcBadge}</td>
+      <td style="font-size:11px;color:${usageColor(d.Usage_Trend)}">${usageIcon(d.Usage_Trend)} ${d.Usage_Trend}</td>
+      <td style="font-size:11px;color:${expClass}">${d.Expansion_Likelihood}</td>
       <td class="action-cell">${d.Recommended_Action}</td>
     </tr>`;
   }).join('');
 
-  document.getElementById('table-body').innerHTML = html;
+  document.getElementById('table-body').innerHTML=html;
+}
+
+// ── CSV export ────────────────────────────────────────────────────────────────
+function exportCSV(){
+  const cols=['Account_Name','CSM','Stage','ARR','Base_ARR','Forecast_ARR','Delta_ARR',
+    'Renewal_Date','Days_to_Renewal','Renewal_Probability','Risk_Level',
+    'Primary_Risk_Driver','Forecast_Category','Usage_Trend','Expansion_Likelihood','Recommended_Action'];
+  const rows=filteredData.length?filteredData:RAW_DATA;
+  const csv=[cols.join(','),...rows.map(d=>cols.map(c=>{
+    const v=d[c];
+    return typeof v==='string'&&v.includes(',') ? `"${v}"` : v;
+  }).join(','))].join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='revenue_forecast_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
 }
 </script>
 </body>
