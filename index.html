@@ -156,7 +156,7 @@
   </div>
   <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
     <div class="live-badge">LIVE</div>
-    <div style="font-size:11px;color:#c7d2fe">Last updated: May 05, 2026 at 02:38 PM</div>
+    <div style="font-size:11px;color:#c7d2fe">Last updated: May 05, 2026 at 02:47 PM</div>
   </div>
 </div>
 
@@ -359,7 +359,12 @@
     </div>
     <div class="filter-group">
       <label>Renewal Quarter</label>
-      <select id="filter-quarter"><option value="">All Quarters</option></select>
+      <select id="filter-quarter">
+        <option value="">All Quarters</option>
+                <option value="Q1 2026">Q1 2026</option>
+        <option value="Q2 2026">Q2 2026</option>
+        <option value="Q3 2026">Q3 2026</option>
+      </select>
     </div>
     <div class="filter-group">
       <label>Expansion</label>
@@ -413,7 +418,7 @@
 
 <div class="footer">
   Built by <span>Uniqode RevOps AI</span> · Salesforce + Metabase + Intercom ·
-  As of <span>May 05, 2026 at 02:38 PM</span>
+  As of <span>May 05, 2026 at 02:47 PM</span>
 </div>
 
 <script>
@@ -591,15 +596,6 @@ function populateFilters(){
   const csms=[...new Set(RAW_DATA.map(d=>d.CSM))].filter(Boolean).sort();
   const sel=document.getElementById('filter-csm');
   csms.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);});
-
-  const qSel=document.getElementById('filter-quarter');
-  const qSet=new Set(RAW_DATA.map(d=>d.Renewal_Quarter).filter(q=>q&&q!=='N/A'));
-  [...qSet].sort((a,b)=>{
-    const [qa,ya]=a.split(' '); const [qb,yb]=b.split(' ');
-    return ya!==yb ? ya.localeCompare(yb) : qa.localeCompare(qb);
-  }).forEach(q=>{
-    const o=document.createElement('option');o.value=q;o.textContent=q;qSel.appendChild(o);
-  });
 
   ['filter-csm','filter-stage','filter-risk','filter-forecast','filter-segment','filter-quarter','filter-expansion']
     .forEach(id=>document.getElementById(id)?.addEventListener('change',applyFilters));
